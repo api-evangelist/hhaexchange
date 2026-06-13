@@ -1,0 +1,133 @@
+{
+  "vocabulary": {
+    "title": "HHAeXchange FHIR API Vocabulary",
+    "description": "Domain terms and definitions used across the HHAeXchange FHIR Onboarding, Internal, and Rate Limits APIs.",
+    "source": "https://api.hhaexchange.com/openapi.json",
+    "terms": [
+      {
+        "term": "AgencyId",
+        "definition": "Numeric identifier for a homecare agency (also referred to as VendorID or CompanyID in certain HHA contexts). Used to map a FHIR client to one or more HHA database agencies.",
+        "type": "identifier"
+      },
+      {
+        "term": "AppVersionId",
+        "definition": "Optional integer identifier for the HHA application version used in BaseUrl resolution. Defaults to 35 when omitted.",
+        "type": "parameter"
+      },
+      {
+        "term": "BaseUrl",
+        "definition": "The resolved HTTPS base URL for a provider's HHA environment. Null for FhirPayer clients. Only populated when AppVersionId is provided.",
+        "type": "response-field"
+      },
+      {
+        "term": "ChhaID",
+        "definition": "Payer identifier stored in HHA's dbo.tblchhamaster table. Mapped as ClientMappings.AgencyId for FhirPayer clients.",
+        "type": "identifier"
+      },
+      {
+        "term": "ClientId",
+        "definition": "UUID that uniquely identifies a FHIR client within the HHAeXchange platform. Generated on onboarding and used in all subsequent API calls.",
+        "type": "identifier"
+      },
+      {
+        "term": "ClientMappingId",
+        "definition": "Primary key of the FHIR.ClientMappings table row, uniquely identifying the combination of client, agency, and environment.",
+        "type": "identifier"
+      },
+      {
+        "term": "ClientSecret",
+        "definition": "UUID credential returned once at client creation time. Must be stored securely by the caller; not persisted in the FHIR database.",
+        "type": "security"
+      },
+      {
+        "term": "ClientType",
+        "definition": "Enum classifying the FHIR client: FhirProvider (agency/provider-facing), FhirAggregator (multi-provider aggregation), FhirThirdParty (third-party integrations), or FhirPayer (Medicaid payer/CHHA-facing).",
+        "type": "enum",
+        "values": ["FhirProvider", "FhirAggregator", "FhirThirdParty", "FhirPayer"]
+      },
+      {
+        "term": "Env",
+        "definition": "HHA environment designator. One of app, app2, or cloud, corresponding to distinct HHA database mirror tiers. When omitted, the server auto-discovers the correct tier.",
+        "type": "enum",
+        "values": ["app", "app2", "cloud"]
+      },
+      {
+        "term": "EVV",
+        "definition": "Electronic Visit Verification — a federally mandated system for recording homecare visits (caregiver, patient, date, time, location) to support Medicaid billing compliance.",
+        "type": "domain-concept"
+      },
+      {
+        "term": "FHIR",
+        "definition": "Fast Healthcare Interoperability Resources — HL7 standard used by HHAeXchange as the basis for its external API integration layer.",
+        "type": "standard"
+      },
+      {
+        "term": "FhirAggregator",
+        "definition": "A FHIR client type that aggregates data across multiple providers. Uses the payer internal endpoint when a payer context is needed.",
+        "type": "client-type"
+      },
+      {
+        "term": "FhirPayer",
+        "definition": "A FHIR client type representing a Medicaid payer (CHHA) that consumes visit and authorization data from HHAeXchange.",
+        "type": "client-type"
+      },
+      {
+        "term": "FhirProvider",
+        "definition": "A FHIR client type representing a homecare provider (agency/vendor) that submits or queries EVV visit and caregiver data.",
+        "type": "client-type"
+      },
+      {
+        "term": "FhirThirdParty",
+        "definition": "A FHIR client type for third-party systems that integrate with HHAeXchange without being a primary provider or payer.",
+        "type": "client-type"
+      },
+      {
+        "term": "GenericReferences",
+        "definition": "HHA database table containing provider-specific reference code lookup data, keyed by CompanyID and ReferenceType (e.g., EmergencyContactRelationship).",
+        "type": "data-source"
+      },
+      {
+        "term": "OnboardingSummary",
+        "definition": "Optional field in onboarding responses listing agency or payer IDs that were skipped (not found) or mapped with inactive status.",
+        "type": "response-field"
+      },
+      {
+        "term": "PayerId",
+        "definition": "Numeric identifier for a payer (CHHA) stored as ClientMappings.AgencyId for FhirPayer clients. Maps to ChhaID in dbo.tblchhamaster.",
+        "type": "identifier"
+      },
+      {
+        "term": "ProviderTaxId",
+        "definition": "Federal Employer Identification Number (FEIN / EIN) of a homecare provider agency, used to resolve agency-to-environment mapping.",
+        "type": "identifier"
+      },
+      {
+        "term": "RateLimit",
+        "definition": "Maximum number of API requests allowed per RateLimitWindow for a given client-agency-environment mapping. Defaults to 50.",
+        "type": "configuration"
+      },
+      {
+        "term": "RateLimitingPlan",
+        "definition": "Named rate limiting tier assigned to a client. Basic uses the default rate limits; Premium allows higher throughput.",
+        "type": "enum",
+        "values": ["Basic", "Premium"]
+      },
+      {
+        "term": "RateLimitWindow",
+        "definition": "Time granularity for rate limiting: Second or Minute. Defaults to Minute.",
+        "type": "enum",
+        "values": ["Second", "Minute"]
+      },
+      {
+        "term": "VendorID",
+        "definition": "HHA internal identifier for an agency/vendor, equivalent to AgencyId in API contexts and CompanyID in database contexts.",
+        "type": "identifier"
+      },
+      {
+        "term": "XApiKey",
+        "definition": "AWS API Gateway x-api-key credential associated with a FHIR client. Returned at onboarding and used as a second credential factor alongside ClientId.",
+        "type": "security"
+      }
+    ]
+  }
+}

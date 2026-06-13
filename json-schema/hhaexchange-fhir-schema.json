@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hhaexchange/main/json-schema/hhaexchange-fhir-schema.json",
+  "title": "HHAeXchange FHIR API Schemas",
+  "description": "JSON Schema definitions for the HHAeXchange FHIR Onboarding, Internal, and Rate Limits APIs.",
+  "$defs": {
+    "AgencyOnboardingInput": {
+      "type": "object",
+      "title": "AgencyOnboardingInput",
+      "description": "One agency item used by onboarding, migrate, and update requests.",
+      "required": ["AgencyId"],
+      "properties": {
+        "AgencyId": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Agency (vendor) identifier. Required; must be a positive integer."
+        },
+        "Env": {
+          "oneOf": [{"type": "string"}, {"type": "null"}],
+          "description": "Optional HHA environment (app, app2, cloud). When omitted, the server discovers the tier from HHA databases."
+        },
+        "RateLimit": {
+          "oneOf": [{"type": "integer"}, {"type": "null"}],
+          "description": "Allowed requests per RateLimitWindow. Defaults to 50 when omitted."
+        },
+        "RateLimitWindow": {
+          "oneOf": [{"type": "string", "enum": ["Second", "Minute"]}, {"type": "null"}],
+          "description": "Rate window granularity: Second or Minute. Defaults to Minute when omitted."
+        }
+      }
+    },
+    "ClientCreateRequest": {
+      "type": "object",
+      "title": "ClientCreateRequest",
+      "description": "Request schema for creating (onboarding) a new FHIR client.",
+      "required": ["ClientName", "ClientType"],
+      "properties": {
+        "ClientName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Name of the client."
+        },
+        "ClientType": {
+          "type": "string",
+          "enum": ["FhirProvider", "FhirAggregator", "FhirThirdParty", "FhirPayer"],
+          "description": "Type of FHIR client."
+        },
+        "Agencies": {
+          "oneOf": [
+            {"type": "array", "items": {"$ref": "#/$defs/AgencyOnboardingInput"}},
+            {"type": "null"}
+          ],
+          "description": "Agencies to map for non-payer client types."
+        },
+        "Payer": {
+          "oneOf": [
+            {"type": "array", "items": {"$ref": "#/$defs/PayerOnboardingInput"}, "maxItems": 1},
+            {"type": "null"}
+          ],
+          "description": "Payer rows for ClientType FhirPayer only; exactly one item."
+        },
+        "Description": {
+          "oneOf": [{"type": "string"}, {"type": "null"}],
+          "description": "Client description."
+        }
+      }
+    },
+    "PayerOnboardingInput": {
+      "type": "object",
+      "title": "PayerOnboardingInput",
+      "description": "One payer (Chha) item for FhirPayer onboarding and PATCH mapping updates.",
+      "required": ["PayerId"],
+      "properties": {
+        "PayerId": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Payer identifier (ChhaID in HHA dbo.tblchhamaster)."
+        },
+        "Env": {
+          "oneOf": [{"type": "string"}, {"type": "null"}],
+          "description": "Optional HHA environment: app, app2, or cloud."
+        },
+        "RateLimit": {
+          "oneOf": [{"type": "integer"}, {"type": "null"}],
+          "description": "Allowed requests per RateLimitWindow. Defaults to 50 when omitted."
+        },
+        "RateLimitWindow": {
+          "oneOf": [{"type": "string", "enum": ["Second", "Minute"]}, {"type": "null"}],
+          "description": "Rate window granularity: Second or Minute."
+        }
+      }
+    },
+    "ClientMigrateRequest": {
+      "type": "object",
+      "title": "ClientMigrateRequest",
+      "description": "Request schema for migrating a client (data migration API).",
+      "required": ["ClientId", "ClientName", "ClientType", "XApiKey", "Agencies"],
+      "properties": {
+        "ClientId": {"type": "string", "minLength": 1, "description": "Client identifier (UUID) to migrate."},
+        "ClientName": {"type": "string", "minLength": 1, "description": "Name of the client."},
+        "ClientType": {
+          "type": "string",
+          "enum": ["FhirProvider", "FhirAggregator", "FhirThirdParty", "FhirPayer"],
+          "description": "Type of FHIR client."
+        },
+        "XApiKey": {"type": "string", "minLength": 1, "description": "API key to store for this client."},
+        "Agencies": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/AgencyOnboardingInput"},
+          "minItems": 1,
+          "description": "Agencies to map after migrate."
+        },
+        "Description": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "Status": {"oneOf": [{"type": "string", "enum": ["Active", "Inactive"]}, {"type": "null"}], "default": "Active"},
+        "RateLimitingPlan": {"oneOf": [{"type": "string", "enum": ["Basic", "Premium"]}, {"type": "null"}], "default": "Basic"}
+      }
+    },
+    "ClientUpdateRequest": {
+      "type": "object",
+      "title": "ClientUpdateRequest",
+      "description": "Request schema for updating client onboarding details.",
+      "properties": {
+        "Description": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "Agencies": {
+          "oneOf": [
+            {"type": "array", "items": {"$ref": "#/$defs/AgencyOnboardingInput"}},
+            {"type": "null"}
+          ]
+        },
+        "Payer": {
+          "oneOf": [
+            {"type": "array", "items": {"$ref": "#/$defs/PayerOnboardingInput"}, "maxItems": 1},
+            {"type": "null"}
+          ]
+        },
+        "RateLimitingPlan": {"oneOf": [{"type": "string", "enum": ["Basic", "Premium"]}, {"type": "null"}]},
+        "Status": {"oneOf": [{"type": "string", "enum": ["Active", "Inactive"]}, {"type": "null"}]}
+      }
+    },
+    "AgencyUser": {
+      "type": "object",
+      "title": "AgencyUser",
+      "description": "Agency row in onboarding responses (response-only).",
+      "required": ["UserId", "UserName", "AgencyId", "RateLimit", "RateLimitWindow"],
+      "properties": {
+        "UserId": {"type": "integer", "description": "System-generated HHA user ID."},
+        "UserName": {"type": "string", "description": "System-generated user name."},
+        "AgencyId": {"type": "integer", "description": "Agency identifier."},
+        "Env": {"oneOf": [{"type": "string"}, {"type": "null"}], "description": "HHA environment (app, app2, cloud)."},
+        "ProviderTaxId": {"oneOf": [{"type": "string"}, {"type": "null"}], "description": "Federal tax number from HHA for this agency."},
+        "RateLimit": {"type": "integer", "description": "Allowed requests per RateLimitWindow."},
+        "RateLimitWindow": {"type": "string", "enum": ["Second", "Minute"]}
+      }
+    },
+    "PayerUser": {
+      "type": "object",
+      "title": "PayerUser",
+      "description": "Payer mapping row in onboarding responses for FhirPayer clients (response-only).",
+      "required": ["UserId", "UserName", "PayerId", "RateLimit", "RateLimitWindow"],
+      "properties": {
+        "UserId": {"type": "integer"},
+        "UserName": {"type": "string"},
+        "PayerId": {"type": "integer", "description": "Payer identifier (ChhaID)."},
+        "Env": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "RateLimit": {"type": "integer"},
+        "RateLimitWindow": {"type": "string", "enum": ["Second", "Minute"]}
+      }
+    },
+    "OnboardingSummary": {
+      "type": "object",
+      "title": "OnboardingSummary",
+      "description": "Present when agencies or payers were skipped or mapped with inactive HHA status.",
+      "properties": {
+        "AgencyIds": {"oneOf": [{"type": "array", "items": {"type": "integer"}}, {"type": "null"}]},
+        "Message": {"oneOf": [{"type": "string"}, {"type": "null"}]},
+        "InactiveAgencyIds": {"oneOf": [{"type": "array", "items": {"type": "integer"}}, {"type": "null"}]},
+        "InactivePayerId": {"oneOf": [{"type": "array", "items": {"type": "integer"}}, {"type": "null"}]},
+        "InactiveMessage": {"oneOf": [{"type": "string"}, {"type": "null"}]}
+      }
+    },
+    "RateLimitConfigData": {
+      "type": "object",
+      "title": "RateLimitConfigData",
+      "description": "Rate limit configuration for one unique client + agency + env combination.",
+      "required": ["ClientId", "ClientMappingId", "Env", "Agency", "RateLimitWindow"],
+      "properties": {
+        "ClientId": {"type": "string"},
+        "ClientMappingId": {"type": "integer"},
+        "Env": {"type": "string"},
+        "Agency": {
+          "type": "object",
+          "required": ["AgencyId", "RateLimit"],
+          "properties": {
+            "AgencyId": {"type": "integer"},
+            "RateLimit": {"type": "integer"}
+          }
+        },
+        "RateLimitWindow": {"type": "string", "enum": ["Second", "Minute"]}
+      }
+    },
+    "ValidationError": {
+      "type": "object",
+      "required": ["loc", "msg", "type"],
+      "properties": {
+        "loc": {"type": "array", "items": {"oneOf": [{"type": "string"}, {"type": "integer"}]}},
+        "msg": {"type": "string"},
+        "type": {"type": "string"}
+      }
+    }
+  }
+}

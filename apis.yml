@@ -44,6 +44,8 @@ apis:
         url: rate-limits/hhaexchange-rate-limits.yml
       - type: FinOps
         url: finops/hhaexchange-finops.yml
+      - type: OpenAPI
+        url: openapi/hhaexchange-fhir-openapi.yml
 common:
   - type: Plans
     url: plans/hhaexchange-plans-pricing.yml

@@ -1,0 +1,233 @@
+{
+  "examples": [
+    {
+      "title": "Create FhirProvider Client",
+      "description": "Onboard a new FhirProvider client with three agency mappings.",
+      "operation": "POST /v1/fhir-onboarding/client",
+      "request": {
+        "ClientName": "Client 1",
+        "ClientType": "FhirProvider",
+        "Agencies": [
+          {"AgencyId": 123, "Env": "app", "RateLimit": 50, "RateLimitWindow": "Minute"},
+          {"AgencyId": 678},
+          {"AgencyId": 789, "Env": "cloud", "RateLimit": 50, "RateLimitWindow": "Minute"}
+        ],
+        "Description": "HHAx Client"
+      },
+      "response": {
+        "Message": "Client onboarded successfully",
+        "Data": {
+          "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+          "ClientName": "Client 1",
+          "ClientSecret": "3f9c7a21-82b4-4c91-a8e7-6b4f2c9a1d78",
+          "ClientType": "FhirProvider",
+          "Status": "Active",
+          "Description": "HHAx Client",
+          "RateLimitingPlan": "Basic",
+          "XApiKey": "brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998",
+          "CreatedAt": "2026-01-12T07:45:30Z",
+          "AgencyUsers": [
+            {"UserId": -6789, "UserName": "FHIRAPIUser_1_123", "AgencyId": 123, "Env": "app", "ProviderTaxId": "12-3456789", "RateLimit": 50, "RateLimitWindow": "Minute"},
+            {"UserId": -4567, "UserName": "FHIRAPIUser_1_678", "AgencyId": 678, "Env": "app2", "RateLimit": 50, "RateLimitWindow": "Minute"},
+            {"UserId": -8765, "UserName": "FHIRAPIUser_1_789", "AgencyId": 789, "Env": "cloud", "RateLimit": 100, "RateLimitWindow": "Second"}
+          ]
+        }
+      }
+    },
+    {
+      "title": "Create FhirPayer Client",
+      "description": "Onboard a new FhirPayer client with a single payer mapping.",
+      "operation": "POST /v1/fhir-onboarding/client",
+      "request": {
+        "ClientName": "Payer Client 1",
+        "ClientType": "FhirPayer",
+        "Payer": [{"PayerId": 789, "Env": "cloud", "RateLimit": 50, "RateLimitWindow": "Minute"}],
+        "Description": "HHAx Payer Client"
+      },
+      "response": {
+        "Message": "Client onboarded successfully",
+        "Data": {
+          "ClientId": "7a3e2b1c-4f95-5e9d-8c7b-6f3d0a1b2e56",
+          "ClientName": "Payer Client 1",
+          "ClientSecret": "4a2d8b32-93c5-5e02-b9f8-7c5g3d0b2e89",
+          "ClientType": "FhirPayer",
+          "Status": "Active",
+          "RateLimitingPlan": "Basic",
+          "XApiKey": "pxyRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n555",
+          "CreatedAt": "2026-01-15T10:00:00Z",
+          "PayerUser": [
+            {"UserId": -1234, "UserName": "FHIRAPIUser_1_789", "PayerId": 789, "Env": "cloud", "RateLimit": 50, "RateLimitWindow": "Minute"}
+          ]
+        }
+      }
+    },
+    {
+      "title": "Get Client Onboarding Details",
+      "description": "Retrieve full onboarding configuration for an existing FHIR client.",
+      "operation": "GET /v1/fhir-onboarding/client/{client_id}",
+      "parameters": {
+        "client_id": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45"
+      },
+      "response": {
+        "Message": "Client onboarding details retrieved successfully",
+        "Data": {
+          "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+          "ClientName": "Client 1",
+          "ClientType": "FhirProvider",
+          "Status": "Active",
+          "Description": "HHAx Client",
+          "RateLimitingPlan": "Basic",
+          "XApiKey": "brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998",
+          "CreatedAt": "2026-01-12T07:45:30Z",
+          "UpdatedAt": "2026-01-12T09:10:15Z",
+          "AgencyUsers": [
+            {"UserId": -6789, "UserName": "FHIRAPIUser_1_123", "AgencyId": 123, "Env": "app", "ProviderTaxId": "12-3456789", "RateLimit": 50, "RateLimitWindow": "Minute"}
+          ]
+        }
+      }
+    },
+    {
+      "title": "Update Client Onboarding Details",
+      "description": "Update agency mappings and rate limiting plan for an existing FhirProvider client.",
+      "operation": "PATCH /v1/fhir-onboarding/client/{client_id}",
+      "parameters": {
+        "client_id": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45"
+      },
+      "request": {
+        "Description": "HHAx Client Updated",
+        "Agencies": [
+          {"AgencyId": 123, "Env": "app", "RateLimit": 100, "RateLimitWindow": "Second"},
+          {"AgencyId": 678}
+        ],
+        "RateLimitingPlan": "Premium",
+        "Status": "Active"
+      },
+      "response": {
+        "Message": "Client onboarding details updated successfully",
+        "Data": {
+          "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+          "ClientName": "Client 1",
+          "ClientType": "FhirProvider",
+          "Status": "Active",
+          "Description": "HHAx Client Updated",
+          "RateLimitingPlan": "Premium",
+          "UpdatedAt": "2026-02-02T09:25:11.102958Z"
+        }
+      }
+    },
+    {
+      "title": "Get Provider Details",
+      "description": "Resolve provider context (base URL, VendorID, environment) for a FhirProvider client.",
+      "operation": "GET /v1/internal/provider",
+      "parameters": {
+        "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+        "XApiKey": "brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998",
+        "ProviderTaxId": "12-3456789"
+      },
+      "response": {
+        "Message": "Provider details resolved successfully",
+        "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+        "XApiKey": "brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998",
+        "BaseUrl": "https://app.hhaexchange.com",
+        "ProviderVersion": 8.0,
+        "ProviderMinorVersion": 3.0,
+        "ProviderId": 123,
+        "ProviderTaxId": "12-3456789",
+        "UserId": -6789,
+        "UserName": "FHIRAPIUser_1_123",
+        "Environment": "app",
+        "Validation": {"VendorID": 123, "PayerID": null}
+      }
+    },
+    {
+      "title": "Get Generic References",
+      "description": "Retrieve emergency contact relationship reference codes for a provider.",
+      "operation": "GET /v1/internal/generic-references",
+      "parameters": {
+        "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+        "XApiKey": "brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998",
+        "ProviderId": 123,
+        "ReferenceType": "EmergencyContactRelationship"
+      },
+      "response": {
+        "CompanyID": 123,
+        "ReferenceType": "EmergencyContactRelationship",
+        "References": [
+          {"ReferenceCode": "SP", "Seq": 1, "ReferenceValue": "Spouse"},
+          {"ReferenceCode": "CH", "Seq": 2, "ReferenceValue": "Child"},
+          {"ReferenceCode": "PR", "Seq": 3, "ReferenceValue": "Parent"}
+        ]
+      }
+    },
+    {
+      "title": "Get Payer Details",
+      "description": "Retrieve payer context for a FhirAggregator or FhirPayer client.",
+      "operation": "GET /v1/internal/payer",
+      "parameters": {
+        "ClientId": "7a3e2b1c-4f95-5e9d-8c7b-6f3d0a1b2e56",
+        "XApiKey": "pxyRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n555"
+      },
+      "response": {
+        "Message": "Payer details resolved successfully",
+        "ClientId": "7a3e2b1c-4f95-5e9d-8c7b-6f3d0a1b2e56",
+        "XApiKey": "pxyRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n555",
+        "BaseUrl": null,
+        "PayerId": 789,
+        "UserId": -1234,
+        "UserName": "FHIRAPIUser_1_789",
+        "Environment": "cloud",
+        "Validation": {"VendorID": null, "PayerID": 789}
+      }
+    },
+    {
+      "title": "Get Rate Limit Configuration",
+      "description": "Retrieve per-client/agency/env rate limit configuration.",
+      "operation": "GET /v1/rate-limits/config",
+      "parameters": {
+        "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+        "AgencyId": "123",
+        "Env": "app"
+      },
+      "response": {
+        "Message": "Rate limiting configuration fetched successfully",
+        "Data": {
+          "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+          "ClientMappingId": 10123,
+          "Env": "app",
+          "Agency": {"AgencyId": 123, "RateLimit": 50},
+          "RateLimitWindow": "Minute"
+        }
+      }
+    },
+    {
+      "title": "Migrate Client",
+      "description": "Migrate an existing client with known ClientId, XApiKey, and agency mappings.",
+      "operation": "POST /v1/fhir-onboarding/client/migrate",
+      "request": {
+        "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+        "ClientName": "Migrated Client One",
+        "ClientType": "FhirProvider",
+        "XApiKey": "brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998",
+        "Agencies": [
+          {"AgencyId": 123, "Env": "app", "RateLimit": 50, "RateLimitWindow": "Minute"},
+          {"AgencyId": 456},
+          {"AgencyId": 789, "Env": "cloud", "RateLimit": 50, "RateLimitWindow": "Minute"}
+        ],
+        "Description": "Migrated from legacy",
+        "Status": "Active",
+        "RateLimitingPlan": "Basic"
+      },
+      "response": {
+        "Message": "Client migrated successfully",
+        "Data": {
+          "ClientId": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+          "ClientName": "Migrated Client One",
+          "ClientType": "FhirProvider",
+          "Status": "Active",
+          "RateLimitingPlan": "Basic",
+          "CreatedAt": "2026-03-01T08:00:00Z"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "hha": "https://api.hhaexchange.com/vocab/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "fhir": "http://hl7.org/fhir/",
+
+    "HHAeXchangeClient": "hha:HHAeXchangeClient",
+    "HHAeXchangeAgency": "hha:HHAeXchangeAgency",
+    "HHAeXchangePayer": "hha:HHAeXchangePayer",
+    "HHAeXchangeVisit": "hha:HHAeXchangeVisit",
+
+    "ClientId": {
+      "@id": "hha:clientId",
+      "@type": "xsd:string"
+    },
+    "ClientName": {
+      "@id": "schema:name",
+      "@type": "xsd:string"
+    },
+    "ClientType": {
+      "@id": "hha:clientType",
+      "@type": "xsd:string"
+    },
+    "ClientSecret": {
+      "@id": "hha:clientSecret",
+      "@type": "xsd:string"
+    },
+    "XApiKey": {
+      "@id": "hha:xApiKey",
+      "@type": "xsd:string"
+    },
+    "Description": {
+      "@id": "schema:description",
+      "@type": "xsd:string"
+    },
+    "Status": {
+      "@id": "schema:status",
+      "@type": "xsd:string"
+    },
+    "CreatedAt": {
+      "@id": "schema:dateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "UpdatedAt": {
+      "@id": "schema:dateModified",
+      "@type": "xsd:dateTime"
+    },
+    "AgencyId": {
+      "@id": "hha:agencyId",
+      "@type": "xsd:integer"
+    },
+    "PayerId": {
+      "@id": "hha:payerId",
+      "@type": "xsd:integer"
+    },
+    "Env": {
+      "@id": "hha:environment",
+      "@type": "xsd:string"
+    },
+    "RateLimit": {
+      "@id": "hha:rateLimit",
+      "@type": "xsd:integer"
+    },
+    "RateLimitWindow": {
+      "@id": "hha:rateLimitWindow",
+      "@type": "xsd:string"
+    },
+    "RateLimitingPlan": {
+      "@id": "hha:rateLimitingPlan",
+      "@type": "xsd:string"
+    },
+    "ProviderTaxId": {
+      "@id": "hha:providerTaxId",
+      "@type": "xsd:string"
+    },
+    "ProviderId": {
+      "@id": "hha:providerId",
+      "@type": "xsd:integer"
+    },
+    "ProviderVersion": {
+      "@id": "hha:providerVersion",
+      "@type": "xsd:decimal"
+    },
+    "ProviderMinorVersion": {
+      "@id": "hha:providerMinorVersion",
+      "@type": "xsd:decimal"
+    },
+    "BaseUrl": {
+      "@id": "schema:url",
+      "@type": "xsd:anyURI"
+    },
+    "UserId": {
+      "@id": "hha:userId",
+      "@type": "xsd:integer"
+    },
+    "UserName": {
+      "@id": "schema:accountId",
+      "@type": "xsd:string"
+    },
+    "Environment": {
+      "@id": "hha:environment",
+      "@type": "xsd:string"
+    },
+    "Validation": {
+      "@id": "hha:validation"
+    },
+    "AgencyUsers": {
+      "@id": "hha:agencyUsers",
+      "@container": "@set"
+    },
+    "PayerUser": {
+      "@id": "hha:payerUsers",
+      "@container": "@set"
+    },
+    "Agencies": {
+      "@id": "hha:agencies",
+      "@container": "@set"
+    },
+    "Payer": {
+      "@id": "hha:payer",
+      "@container": "@set"
+    },
+    "OnboardingSummary": {
+      "@id": "hha:onboardingSummary"
+    },
+    "AgencyIds": {
+      "@id": "hha:agencyIds",
+      "@container": "@set"
+    },
+    "InactiveAgencyIds": {
+      "@id": "hha:inactiveAgencyIds",
+      "@container": "@set"
+    },
+    "InactivePayerId": {
+      "@id": "hha:inactivePayerIds",
+      "@container": "@set"
+    },
+    "InactiveMessage": {
+      "@id": "hha:inactiveMessage",
+      "@type": "xsd:string"
+    },
+    "Message": {
+      "@id": "schema:description",
+      "@type": "xsd:string"
+    },
+    "Data": {
+      "@id": "hha:data"
+    },
+    "CompanyID": {
+      "@id": "hha:companyId",
+      "@type": "xsd:integer"
+    },
+    "ReferenceType": {
+      "@id": "hha:referenceType",
+      "@type": "xsd:string"
+    },
+    "References": {
+      "@id": "hha:references",
+      "@container": "@set"
+    },
+    "ReferenceCode": {
+      "@id": "hha:referenceCode",
+      "@type": "xsd:string"
+    },
+    "ReferenceValue": {
+      "@id": "hha:referenceValue",
+      "@type": "xsd:string"
+    },
+    "Seq": {
+      "@id": "hha:sequence",
+      "@type": "xsd:integer"
+    },
+    "ClientMappingId": {
+      "@id": "hha:clientMappingId",
+      "@type": "xsd:integer"
+    },
+    "Agency": {
+      "@id": "hha:agency"
+    }
+  }
+}
