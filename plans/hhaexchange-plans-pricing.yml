@@ -1,0 +1,38 @@
+name: HHAeXchange Plans and Pricing
+description: HHAeXchange is an enterprise homecare management platform sold to home health agencies and payers. Pricing is not publicly listed and is available upon request. The platform starts at approximately $375/month for agency-tier access. API access for third-party EVV (Electronic Visit Verification) integrations is governed by state Medicaid program agreements rather than direct commercial tiers.
+url: https://www.hhaexchange.com
+created: 2026-06-13
+modified: 2026-06-13
+plans:
+  - name: Agency Platform
+    description: Core homecare management platform for home health agencies. Includes scheduling, billing, EVV, telephony IVR, and mobile caregiver app. Pricing available on request; estimated starting at $375/month.
+    pricingModel: subscription
+    pricingURL: https://www.hhaexchange.com
+    features:
+      - Scheduling and visit management
+      - Medicaid billing and prebilling
+      - Electronic Visit Verification (EVV)
+      - Telephony IVR for visit confirmation
+      - Mobile caregiver app
+      - Authorization management
+      - EDI/SFTP file integrations
+      - API access for EVV aggregation
+
+  - name: Third-Party EVV Integration (API)
+    description: API access granted to third-party EVV vendors and aggregators to submit visit and caregiver data to HHAeXchange on behalf of agencies. Access requires state Medicaid program onboarding and is not a separately purchasable tier — credentials are issued after completing the onboarding attestation and vendor testing process.
+    pricingModel: partner-agreement
+    pricingURL: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm
+    features:
+      - OAuth 2.0 client credentials
+      - Caregiver record submission
+      - EVV visit record submission and updates
+      - Transaction status checks
+      - State-specific Medicaid compliance endpoints
+      - Test environment access
+      - Production credentials within 1-2 business days for pre-tested vendors
+
+notes:
+  - Pricing is enterprise/quote-based; no self-serve public pricing is published.
+  - API credentials are limited to 2 active credential sets per provider at a time.
+  - API onboarding requires state-level Medicaid program attestation.
+  - Contact: EINTSupport@hhaexchange.com for API integration inquiries.

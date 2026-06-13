@@ -1,0 +1,53 @@
+name: HHAeXchange API Rate Limits
+description: Rate limiting policies for the HHAeXchange EVV REST API. The API enforces per-method, per-provider rate limits and returns HTTP 429 when limits are exceeded. OAuth 2.0 access tokens have a fixed 30-minute expiration.
+url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-HTTP-Response-Status-Codes-P.htm
+created: 2026-06-13
+modified: 2026-06-13
+rateLimits:
+  - name: Per-Method Per-Provider Limit
+    description: Maximum number of API calls allowed per HTTP method per provider within a single minute window.
+    limit: 200
+    period: minute
+    scope: per-provider, per-method
+    httpStatusOnExceedance: 429
+    notes: Applies to all EVV API endpoints (POST, PUT, DELETE, GET).
+
+  - name: Transaction Status Check Limit
+    description: Maximum number of transaction status check calls per second.
+    limit: 5
+    period: second
+    scope: per-provider
+    endpoint: GET /api/v{version}/visits/transactions/{transactionId}
+    notes: Clients should implement exponential backoff when polling transaction status.
+
+  - name: OAuth 2.0 Token Expiration
+    description: Access tokens issued by the Identity Server expire after 30 minutes. Third-party EVV systems must reuse the generated token until expiration before requesting a new one.
+    tokenLifetimeMinutes: 30
+    endpoint: POST /identity/connect/token
+    notes: Reuse tokens to avoid unnecessary token generation requests.
+
+  - name: Active Credential Sets Limit
+    description: Maximum number of active OAuth 2.0 client credential sets a provider can maintain simultaneously.
+    limit: 2
+    scope: per-provider
+    notes: Providers managing credential rotation should be aware of this cap.
+
+transport:
+  protocol: HTTPS
+  tlsVersion: "1.2"
+  dataFormat: JSON
+  transmissionFrequency: near-real-time
+
+errorHandling:
+  - httpStatus: 429
+    description: Too Many Requests — rate limit exceeded. Reduce request frequency and retry after the current minute window resets.
+  - httpStatus: 400
+    description: Bad Request — invalid syntax, missing required fields, or validation failure. Client must fix and resubmit.
+  - httpStatus: 401
+    description: Unauthorized — missing or invalid authentication token. Obtain a new OAuth 2.0 token and retry.
+  - httpStatus: 403
+    description: Forbidden — client lacks access rights. Contact HHAeXchange support to obtain API permissions.
+  - httpStatus: 404
+    description: Not Found — requested resource unavailable. May become available later.
+  - httpStatus: 500
+    description: Internal Server Error — unexpected server condition. Retry after HHAeXchange resolves the issue.

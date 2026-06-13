@@ -1,0 +1,55 @@
+name: HHAeXchange FinOps
+description: Financial operations considerations for integrating with HHAeXchange APIs. As an enterprise B2B platform, HHAeXchange does not charge per-API-call fees. Costs are associated with platform subscription, implementation services, and state Medicaid program obligations. EVV API access for third-party vendors is governed by partner agreements and Medicaid program requirements rather than consumption-based billing.
+url: https://www.hhaexchange.com
+created: 2026-06-13
+modified: 2026-06-13
+costModel:
+  type: subscription-plus-partner-agreement
+  selfServe: false
+  publicPricing: false
+  estimatedStartingPrice:
+    amount: 375
+    currency: USD
+    period: month
+    source: third-party review sites (Capterra, GetApp)
+    notes: Enterprise pricing; actual cost varies by agency size, state, and contracted services.
+
+costDrivers:
+  - name: Platform Subscription
+    description: Monthly or annual subscription fee for the HHAeXchange agency platform covering scheduling, billing, EVV, and reporting features.
+    model: fixed-subscription
+    negotiated: true
+
+  - name: EVV API Integration
+    description: No additional per-call or usage-based fee is charged for EVV API integration. Access is provisioned as part of state Medicaid program agreements between HHAeXchange, the state, and the third-party EVV vendor.
+    model: included-in-program-agreement
+    notes: Third-party EVV vendors may have separate contractual obligations to state Medicaid agencies.
+
+  - name: Implementation and Onboarding
+    description: Onboarding for new API vendors includes test environment provisioning, documentation, and credential issuance. Pre-tested vendors receive production credentials within 1-2 business days. New vendors undergo a testing phase.
+    model: included
+    notes: Contact EINTSupport@hhaexchange.com to initiate.
+
+  - name: EDI/File Integration
+    description: SFTP and EDI integrations are available in addition to API integrations. Costs, if any, are part of the platform agreement.
+    model: included-or-negotiated
+
+optimization:
+  - recommendation: Reuse OAuth 2.0 tokens for their full 30-minute lifetime to minimize token endpoint calls.
+  - recommendation: Batch caregiver and visit records in single API calls where the API supports multiple records per request, to reduce overall call volume against the 200 calls/method/minute limit.
+  - recommendation: Implement exponential backoff for transaction status polling to stay within the 5 calls/second limit.
+  - recommendation: Maintain only the minimum required credential sets (max 2) and rotate credentials securely.
+  - recommendation: Align data transmission to near-real-time cadence per HHAeXchange requirements to avoid bulk re-submission costs and Medicaid compliance penalties.
+
+contacts:
+  - role: API Integration Support
+    email: EINTSupport@hhaexchange.com
+    notes: For API onboarding, credential requests, and integration troubleshooting.
+  - role: Vendor Relationship
+    notes: Vendor Relationship team is engaged after provider attestation submission for onboarding.
+
+references:
+  - url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm
+    description: Provider onboarding and integration process documentation
+  - url: https://www.capterra.com/p/140366/eXchange-Suite/
+    description: Third-party pricing reference (Capterra)
