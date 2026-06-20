@@ -1,6 +1,6 @@
 name: HHAeXchange
 description: Homecare management platform with a REST API for scheduling aide visits, verifying care delivery via telephony and mobile, managing authorizations, and processing Medicaid billing. Provides EVV (Electronic Visit Verification) APIs for third-party integration with state Medicaid systems.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/hhaexchange/refs/heads/main/apis.yml
 created: 2026-06-13
 modified: 2026-06-13
@@ -18,7 +18,7 @@ tags:
 apis:
   - name: HHAeXchange EVV API
     description: RESTful HTTPS API for Electronic Visit Verification enabling third-party EVV systems to submit caregiver and visit records to HHAeXchange for Medicaid billing and state compliance. Supports caregiver management, visit submission, and transaction status checks.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
     baseURL: https://api.hhaexchange.com
     tags:
