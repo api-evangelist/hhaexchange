@@ -32,9 +32,9 @@ apis:
         url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
       - type: APIWorkflow
         url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Workflow-Endpoints-P.htm
-      - type: Onboarding
+      - type: GettingStarted
         url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm
-      - type: StatusCodes
+      - type: ErrorCodes
         url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-HTTP-Response-Status-Codes-P.htm
       - type: Status
         url: https://hhaexchange.statuspage.io/
