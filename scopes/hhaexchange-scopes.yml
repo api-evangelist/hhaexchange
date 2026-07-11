@@ -1,0 +1,16 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/hhaexchange-fhir-openapi.yml
+schemes:
+- name: bearerAuth
+  source: openapi/hhaexchange-fhir-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api.hhaexchange.com/v1/fhir/auth/token
+scopes:
+- scope: full_access
+  description: Read and write access for Internal Provider, Onboarding, and Rate limits.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/hhaexchange-fhir-openapi.yml

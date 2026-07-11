@@ -47,6 +47,8 @@ apis:
       - type: OpenAPI
         url: openapi/hhaexchange-fhir-openapi.yml
 common:
+  - type: OAuthScopes
+    url: scopes/hhaexchange-scopes.yml
   - type: Plans
     url: plans/hhaexchange-plans-pricing.yml
   - type: RateLimits
@@ -59,6 +61,8 @@ common:
     url: https://hhaexchange.statuspage.io/
   - type: Support
     url: https://www.hhaexchange.com/knowledge-base
+  - url: https://www.hhaexchange.com/feed/
+    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
