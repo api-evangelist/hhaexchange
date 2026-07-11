@@ -47,6 +47,10 @@ apis:
       - type: OpenAPI
         url: openapi/hhaexchange-fhir-openapi.yml
 common:
+  - type: DomainSecurity
+    url: security/hhaexchange-domain-security.yml
+  - type: Authentication
+    url: authentication/hhaexchange-authentication.yml
   - type: OAuthScopes
     url: scopes/hhaexchange-scopes.yml
   - type: Plans
