@@ -1,0 +1,207 @@
+openapi: 3.1.0
+info:
+  title: HHAeXchange FHIR Configuration API
+  description: '## APIs
+
+
+    **Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.
+
+
+    **Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.
+
+
+    **Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.
+
+
+    **Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.
+
+
+    **Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.
+
+
+    ## Authentication
+
+
+    **OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.
+
+    '
+  version: 0.1.0
+servers:
+- url: https://api.hhaexchange.com
+  description: HHAeXchange FHIR API
+tags:
+- name: Configuration
+paths:
+  /v1/rate-limits/config:
+    get:
+      tags:
+      - Configuration
+      summary: Get Rate Limit Configuration
+      description: Retrieve the rate limit configuration for a specific client, agency, and environment combination. The triple (ClientId, AgencyId, Env) uniquely identifies one ClientMapping row on SB/PROD. On QA/IMPL (single HHA mirror), the resolved mapping may use a different stored Env than the query parameter; see response `Data.Env`. Returns the per-second or per-minute request limit stored on that mapping. Falls back to application defaults (50 / Minute) when no explicit configuration has been saved.
+      operationId: get_rate_limit_config_v1_rate_limits_config_get
+      parameters:
+      - name: ClientId
+        in: query
+        required: false
+        description: 'FHIR client UUID (required). Example: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45'
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'FHIR client UUID (required). Example: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45'
+          title: Clientid
+      - name: AgencyId
+        in: query
+        required: false
+        description: Agency (vendor) identifier — required; must be a positive integer
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agency (vendor) identifier — required; must be a positive integer
+          title: Agencyid
+      - name: Env
+        in: query
+        required: false
+        description: 'HHA environment (required): app, app2, or cloud'
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'HHA environment (required): app, app2, or cloud'
+          title: Env
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+components:
+  schemas:
+    AgencyRateLimitDetail:
+      type: object
+      required:
+      - AgencyId
+      - RateLimit
+      title: AgencyRateLimitDetail
+      description: Per-agency portion of the rate limit config response.
+      properties:
+        AgencyId:
+          type: integer
+          title: Agencyid
+          description: Agency (vendor) identifier
+        RateLimit:
+          type: integer
+          title: Ratelimit
+          description: Allowed requests per RateLimitWindow
+    RateLimitConfigData:
+      type: object
+      required:
+      - ClientId
+      - ClientMappingId
+      - Env
+      - Agency
+      - RateLimitWindow
+      title: RateLimitConfigData
+      description: Rate limit configuration for one unique client + agency + env combination.
+      example:
+        Agency:
+          AgencyId: 123
+          RateLimit: 50
+        ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+        ClientMappingId: 10123
+        Env: app
+        RateLimitWindow: Minute
+      properties:
+        ClientId:
+          type: string
+          title: Clientid
+          description: FHIR client UUID
+        ClientMappingId:
+          type: integer
+          title: Clientmappingid
+          description: FHIR.ClientMappings primary key
+        Env:
+          type: string
+          title: Env
+          description: HHA environment for this mapping (app, app2, cloud)
+        Agency:
+          $ref: '#/components/schemas/AgencyRateLimitDetail'
+          description: Agency identifier and its request rate limit
+        RateLimitWindow:
+          type: string
+          title: Ratelimitwindow
+          description: Rate window granularity (Second, Minute)
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+    RateLimitConfigResponse:
+      type: object
+      required:
+      - Message
+      - Data
+      title: RateLimitConfigResponse
+      description: Wrapper for GET /rate-limits/config response.
+      example:
+        Data:
+          Agency:
+            AgencyId: 123
+            RateLimit: 50
+          ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+          ClientMappingId: 10123
+          Env: app
+          RateLimitWindow: Minute
+        Message: Rate limiting configuration fetched successfully
+      properties:
+        Message:
+          type: string
+          title: Message
+          description: Response message
+        Data:
+          $ref: '#/components/schemas/RateLimitConfigData'
+          description: Rate limit configuration
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.hhaexchange.com/v1/fhir/auth/token
+          scopes:
+            full_access: Read and write access for Internal Provider, Onboarding, and Rate limits.

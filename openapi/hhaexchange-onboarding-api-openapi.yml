@@ -1,0 +1,1027 @@
+openapi: 3.1.0
+info:
+  title: HHAeXchange FHIR Configuration Onboarding API
+  description: '## APIs
+
+
+    **Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.
+
+
+    **Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.
+
+
+    **Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.
+
+
+    **Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.
+
+
+    **Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.
+
+
+    ## Authentication
+
+
+    **OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.
+
+    '
+  version: 0.1.0
+servers:
+- url: https://api.hhaexchange.com
+  description: HHAeXchange FHIR API
+tags:
+- name: Onboarding
+paths:
+  /v1/fhir-onboarding/client:
+    post:
+      tags:
+      - Onboarding
+      summary: Create Client (Onboarding)
+      description: Onboard a new FHIR client (same endpoint for all client types). Generates ClientId and ClientSecret; ClientSecret is returned once. In Swagger, open **Request body** → **Examples** and choose **FhirProvider** (Agencies payload) or **FhirPayer** (Payer payload) to load the matching JSON.
+      operationId: create_client_v1_fhir_onboarding_client_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientCreateRequest'
+            examples:
+              FhirProvider:
+                summary: FhirProvider
+                description: 'Provider-style onboarding: **Agencies** array (VendorID per row); optional Env and rate limits.'
+                value:
+                  ClientName: Client 1
+                  ClientType: FhirProvider
+                  Agencies:
+                  - AgencyId: 123
+                    Env: app
+                    RateLimit: 50
+                    RateLimitWindow: Minute
+                  - AgencyId: 678
+                  - AgencyId: 789
+                    Env: cloud
+                    RateLimit: 50
+                    RateLimitWindow: Minute
+                  Description: HHAx Client
+              FhirPayer:
+                summary: FhirPayer
+                description: 'Payer onboarding: exactly one object in **Payer** (PayerId = ChhaID; stored as ClientMappings.AgencyId).'
+                value:
+                  ClientName: Client 1
+                  ClientType: FhirPayer
+                  Payer:
+                  - PayerId: 789
+                    Env: cloud
+                    RateLimit: 50
+                    RateLimitWindow: Minute
+                  Description: HHAx Client
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientCreateResponseWrapper'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+  /v1/fhir-onboarding/client/migrate:
+    post:
+      tags:
+      - Onboarding
+      summary: Migrate Client (Data Migration)
+      description: Migrate one client with provided ClientId, XApiKey, and agencies. Creates FHIR.Clients, HHA users, and FHIR.ClientMappings. No AWS key creation, no IDP write.
+      operationId: migrate_client_v1_fhir_onboarding_client_migrate_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientMigrateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientMigrateResponseWrapper'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+  /v1/fhir-onboarding/client/{client_id}:
+    get:
+      tags:
+      - Onboarding
+      summary: Get Client Onboarding Details
+      description: Retrieve the complete onboarding configuration for an existing FHIR client.
+      operationId: get_client_v1_fhir_onboarding_client__client_id__get
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        description: Unique identifier of the client whose onboarding details are to be retrieved
+        example: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+        schema:
+          type: string
+          description: Unique identifier of the client whose onboarding details are to be retrieved
+          title: Client Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOnboardingResponseWrapper'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+    patch:
+      tags:
+      - Onboarding
+      summary: Update Client Onboarding Details
+      description: Update the onboarding configuration of an existing FHIR client. Use **Agencies** for FhirProvider / FhirAggregator / FhirThirdParty mapping updates, or **Payer** (exactly one item) for **FhirPayer** clients. In Swagger, open **Request body** → **Examples** to load provider vs payer sample JSON.
+      operationId: update_client_v1_fhir_onboarding_client__client_id__patch
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        description: Unique identifier of the client whose onboarding configuration is being updated
+        example: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+        schema:
+          type: string
+          description: Unique identifier of the client whose onboarding configuration is being updated
+          title: Client Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientUpdateRequest'
+            examples:
+              FhirProvider:
+                summary: FhirProvider / Aggregator / ThirdParty
+                description: Mapping update via **Agencies**; stored ClientType must not be FhirPayer.
+                value:
+                  Description: HHAx Client
+                  Agencies:
+                  - AgencyId: 123
+                    Env: app
+                    RateLimit: 100
+                    RateLimitWindow: Second
+                  - AgencyId: 678
+                  RateLimitingPlan: Premium
+                  Status: Inactive
+              FhirPayer:
+                summary: FhirPayer
+                description: 'Payer mapping update: exactly one object in **Payer** (PayerId = ChhaID).'
+                value:
+                  Description: HHAx Client
+                  Payer:
+                  - PayerId: 789
+                    Env: cloud
+                    RateLimit: 80
+                    RateLimitWindow: Second
+                  RateLimitingPlan: Basic
+                  Status: Active
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientUpdateResponseWrapper'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+components:
+  schemas:
+    ClientCreateResponse:
+      type: object
+      required:
+      - ClientId
+      - ClientName
+      - ClientSecret
+      - ClientType
+      - Status
+      - RateLimitingPlan
+      title: ClientCreateResponse
+      description: Response schema for client create (onboarding) — ClientSecret plus AgencyUsers or PayerUser.
+      example:
+        AgencyUsers:
+        - AgencyId: 123
+          Env: app
+          ProviderTaxId: 12-3456789
+          RateLimit: 50
+          RateLimitWindow: Minute
+          UserId: -6789
+          UserName: FHIRAPIUser_1_123
+        - AgencyId: 678
+          Env: app2
+          RateLimit: 50
+          RateLimitWindow: Minute
+          UserId: -4567
+          UserName: FHIRAPIUser_1_678
+        - AgencyId: 789
+          Env: cloud
+          RateLimit: 100
+          RateLimitWindow: Second
+          UserId: -8765
+          UserName: FHIRAPIUser_1_789
+        ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+        ClientName: Client 1
+        ClientSecret: 3f9c7a21-82b4-4c91-a8e7-6b4f2c9a1d78
+        ClientType: FhirProvider
+        CreatedAt: '2026-01-12T07:45:30Z'
+        Description: HHAx Client
+        RateLimitingPlan: Basic
+        Status: Active
+        XApiKey: brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998
+      properties:
+        ClientId:
+          type: string
+          title: Clientid
+          description: Unique client identifier (UUID)
+        ClientName:
+          type: string
+          title: Clientname
+          description: Name of the client
+        ClientSecret:
+          type: string
+          title: Clientsecret
+          description: Generated client secret (UUID) - store securely; not persisted in FHIR DB
+        ClientType:
+          type: string
+          title: Clienttype
+          description: Type of FHIR client
+        Description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Client description
+        Status:
+          type: string
+          title: Status
+          description: Client status (Active/Inactive)
+        AgencyUsers:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/AgencyUser'
+          - type: 'null'
+          title: Agencyusers
+          description: Mapped agencies for non-payer types; omitted for FhirPayer
+        PayerUser:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/PayerUser'
+          - type: 'null'
+          title: Payeruser
+          description: Mapped payer (Chha) for **FhirPayer** only; omitted for other types
+        OnboardingSummary:
+          anyOf:
+          - $ref: '#/components/schemas/OnboardingSummary'
+          - type: 'null'
+          description: Only when one or more input agencies were not mapped
+        XApiKey:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Xapikey
+          description: AWS API Gateway x-api-key
+        RateLimitingPlan:
+          type: string
+          title: Ratelimitingplan
+          description: Rate limiting plan (Basic, Premium)
+        CreatedAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Createdat
+          description: Creation timestamp (ISO 8601)
+    ClientOnboardingResponse:
+      type: object
+      required:
+      - ClientId
+      - ClientName
+      - ClientType
+      - Status
+      title: ClientOnboardingResponse
+      description: Response schema for client onboarding details (GET/PATCH/migrate `Data`).
+      example:
+        AgencyUsers:
+        - AgencyId: 123
+          Env: app
+          ProviderTaxId: 12-3456789
+          RateLimit: 50
+          RateLimitWindow: Minute
+          UserId: -6789
+          UserName: FHIRAPIUser_1_123
+        - AgencyId: 678
+          Env: app2
+          RateLimit: 50
+          RateLimitWindow: Minute
+          UserId: -4567
+          UserName: FHIRAPIUser_1_678
+        - AgencyId: 789
+          Env: cloud
+          RateLimit: 100
+          RateLimitWindow: Second
+          UserId: -8765
+          UserName: FHIRAPIUser_1_789
+        ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+        ClientName: Client 1
+        ClientType: FhirProvider
+        CreatedAt: '2026-01-12T07:45:30Z'
+        Description: HHAx Client
+        RateLimitingPlan: Basic
+        Status: Active
+        UpdatedAt: '2026-01-12T09:10:15Z'
+        XApiKey: brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998
+      properties:
+        ClientId:
+          type: string
+          title: Clientid
+          description: Unique client identifier (UUID)
+        ClientName:
+          type: string
+          title: Clientname
+          description: Name of the client
+        ClientType:
+          type: string
+          title: Clienttype
+          description: Type of FHIR client
+        Description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Client description
+        Status:
+          type: string
+          title: Status
+          description: Client status (Active/Inactive)
+        AgencyUsers:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/AgencyUser'
+          - type: 'null'
+          title: Agencyusers
+          description: Per-mapping agency rows (FhirProvider, FhirAggregator, FhirThirdParty); omitted for FhirPayer — use PayerUser
+        PayerUser:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/PayerUser'
+          - type: 'null'
+          title: Payeruser
+          description: Per-mapping payer rows for **FhirPayer** only (PayerId = ChhaID); omitted for other client types — use AgencyUsers
+        OnboardingSummary:
+          anyOf:
+          - $ref: '#/components/schemas/OnboardingSummary'
+          - type: 'null'
+          description: Only when create/migrate skipped one or more agencies
+        XApiKey:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Xapikey
+          description: AWS API Gateway x-api-key
+        RateLimitingPlan:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ratelimitingplan
+          description: Rate limiting plan (Basic, Premium)
+        CreatedAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Createdat
+          description: Creation timestamp (ISO 8601)
+        UpdatedAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updatedat
+          description: Last update timestamp (ISO 8601)
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+    ClientCreateRequest:
+      type: object
+      required:
+      - ClientName
+      - ClientType
+      title: ClientCreateRequest
+      description: 'Request schema for creating (onboarding) a new FHIR client.
+
+
+        Use `Agencies` for **FhirProvider** / **FhirAggregator** / **FhirThirdParty**.
+
+        Use `Payer` (exactly one item) for **FhirPayer** only; do not send `Agencies` for payers.
+
+        '
+      properties:
+        ClientName:
+          type: string
+          minLength: 1
+          title: Clientname
+          description: Name of the client
+        ClientType:
+          type: string
+          enum:
+          - FhirProvider
+          - FhirAggregator
+          - FhirThirdParty
+          - FhirPayer
+          title: Clienttype
+          description: Type of FHIR client (FhirProvider, FhirAggregator, FhirThirdParty, FhirPayer)
+        Agencies:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/AgencyOnboardingInput'
+          - type: 'null'
+          title: Agencies
+          description: Agencies to map for non-payer client types; each row may set Env or rely on multi-env discovery (dbo.Vendors). Required unless ClientType is FhirPayer.
+        Payer:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/PayerOnboardingInput'
+          - type: 'null'
+          title: Payer
+          description: 'Payer rows for ClientType FhirPayer only: exactly one item with PayerId (optional Env, RateLimit, RateLimitWindow).'
+        Description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Client description
+    ClientUpdateResponseWrapper:
+      type: object
+      required:
+      - Message
+      - Data
+      title: ClientUpdateResponseWrapper
+      description: Wrapper for client onboarding update API responses (PATCH).
+      example:
+        Data:
+          AgencyUsers:
+          - AgencyId: 123
+            Env: app
+            ProviderTaxId: 12-3456789
+            RateLimit: 50
+            RateLimitWindow: Minute
+            UserId: -6789
+            UserName: FHIRAPIUser_1_123
+          - AgencyId: 678
+            Env: app2
+            RateLimit: 50
+            RateLimitWindow: Minute
+            UserId: -4567
+            UserName: FHIRAPIUser_1_678
+          - AgencyId: 789
+            Env: cloud
+            RateLimit: 100
+            RateLimitWindow: Second
+            UserId: -8765
+            UserName: FHIRAPIUser_1_789
+          ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+          ClientName: Client 1
+          ClientType: FhirProvider
+          CreatedAt: '2026-02-02T14:28:18.479016Z'
+          Description: HHAx Client Updated
+          RateLimitingPlan: Premium
+          Status: Active
+          UpdatedAt: '2026-02-02T09:25:11.102958Z'
+          XApiKey: brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998
+        Message: Client onboarding details updated successfully
+      properties:
+        Message:
+          type: string
+          title: Message
+          description: Response message
+        Data:
+          $ref: '#/components/schemas/ClientOnboardingResponse'
+          description: Client onboarding data
+    PayerUser:
+      type: object
+      required:
+      - UserId
+      - UserName
+      - PayerId
+      - RateLimit
+      - RateLimitWindow
+      title: PayerUser
+      description: Payer (Chha) mapping row in onboarding responses for **FhirPayer** clients (response-only).
+      properties:
+        UserId:
+          type: integer
+          title: Userid
+          description: System-generated HHA user ID
+        UserName:
+          type: string
+          title: Username
+          description: System-generated user name
+        PayerId:
+          type: integer
+          title: Payerid
+          description: Payer identifier (ChhaID); stored as ClientMappings.AgencyId
+        Env:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Env
+          description: HHA environment stored on this mapping (app, app2, cloud)
+        RateLimit:
+          type: integer
+          title: Ratelimit
+          description: Allowed requests per RateLimitWindow for this payer mapping
+        RateLimitWindow:
+          type: string
+          enum:
+          - Second
+          - Minute
+          title: Ratelimitwindow
+          description: Rate window granularity (Second, Minute)
+    ClientOnboardingResponseWrapper:
+      type: object
+      required:
+      - Message
+      - Data
+      title: ClientOnboardingResponseWrapper
+      description: Wrapper for client onboarding API responses (GET).
+      example:
+        Data:
+          AgencyUsers:
+          - AgencyId: 123
+            Env: app
+            ProviderTaxId: 12-3456789
+            RateLimit: 50
+            RateLimitWindow: Minute
+            UserId: -6789
+            UserName: FHIRAPIUser_1_123
+          - AgencyId: 678
+            Env: app2
+            RateLimit: 50
+            RateLimitWindow: Minute
+            UserId: -4567
+            UserName: FHIRAPIUser_1_678
+          - AgencyId: 789
+            Env: cloud
+            RateLimit: 100
+            RateLimitWindow: Second
+            UserId: -8765
+            UserName: FHIRAPIUser_1_789
+          ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+          ClientName: Client 1
+          ClientType: FhirProvider
+          CreatedAt: '2026-01-12T07:45:30Z'
+          Description: HHAx Client
+          RateLimitingPlan: Basic
+          Status: Active
+          UpdatedAt: '2026-01-12T09:10:15Z'
+          XApiKey: brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998
+        Message: Client onboarding details retrieved successfully
+      properties:
+        Message:
+          type: string
+          title: Message
+          description: Response message
+        Data:
+          $ref: '#/components/schemas/ClientOnboardingResponse'
+          description: Client onboarding data
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+    ClientMigrateResponseWrapper:
+      type: object
+      required:
+      - Message
+      - Data
+      title: ClientMigrateResponseWrapper
+      description: Wrapper for client migrate API response.
+      properties:
+        Message:
+          type: string
+          title: Message
+          description: Response message
+        Data:
+          $ref: '#/components/schemas/ClientOnboardingResponse'
+          description: Client onboarding data
+    PayerOnboardingInput:
+      type: object
+      required:
+      - PayerId
+      title: PayerOnboardingInput
+      description: 'One payer (Chha) item for **FhirPayer** onboarding and PATCH mapping updates.
+
+
+        `PayerId` maps to `FHIR.ClientMappings.AgencyId`. When `Env` is omitted,
+
+        empty, or whitespace-only, the server discovers the HHA tier using
+
+        `dbo.tblchhamaster` across mirrors. When `Env` is set, it must be exactly
+
+        app, app2, or cloud (case-insensitive, no leading or trailing spaces); the payer
+
+        id must exist as `ChhaID` in `dbo.tblchhamaster` for that environment before mapping.
+
+        '
+      properties:
+        PayerId:
+          type: integer
+          exclusiveMinimum: 0
+          title: Payerid
+          description: Payer identifier (ChhaID in HHA dbo.tblchhamaster). Stored as ClientMappings.AgencyId.
+        Env:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Env
+          description: 'Optional HHA environment: app, app2, or cloud (case-insensitive, no leading or trailing spaces). When omitted or empty, discovery uses dbo.tblchhamaster across tiers. When set, the payer id must exist in dbo.tblchhamaster for that environment.'
+        RateLimit:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ratelimit
+          description: Allowed requests per RateLimitWindow. Defaults to 50 when omitted. Must be a positive integer when provided (validated on write).
+        RateLimitWindow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ratelimitwindow
+          description: 'Rate window granularity: Second or Minute (case-insensitive). Defaults to Minute when omitted (validated on write).'
+    AgencyOnboardingInput:
+      type: object
+      required:
+      - AgencyId
+      title: AgencyOnboardingInput
+      description: "One agency item used by onboarding, migrate, and update requests.\n\nField requirements:\n- `AgencyId` is **required** (positive integer; agency/vendor identifier).\n- `Env` is **optional**. When omitted, the server discovers the HHA tier\n  that owns this agency by probing the configured HHA databases\n  (app, app2, cloud) in order.\n- `RateLimit` / `RateLimitWindow` are **optional**. Defaults to 50 / Minute.\n"
+      properties:
+        AgencyId:
+          type: integer
+          exclusiveMinimum: 0
+          title: Agencyid
+          description: Agency (vendor) identifier. Required; must be a positive integer.
+        Env:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Env
+          description: Optional HHA environment (app, app2, cloud), case-insensitive, no leading or trailing spaces. When omitted or empty, the server discovers the tier from HHA databases.
+        RateLimit:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ratelimit
+          description: Allowed requests per RateLimitWindow. Defaults to 50 when omitted. Must be a positive integer when provided (validated on write).
+        RateLimitWindow:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ratelimitwindow
+          description: 'Rate window granularity: Second or Minute (case-insensitive). Defaults to Minute when omitted (validated on write).'
+    AgencyUser:
+      type: object
+      required:
+      - UserId
+      - UserName
+      - AgencyId
+      - RateLimit
+      - RateLimitWindow
+      title: AgencyUser
+      description: 'Agency row in onboarding responses: user + mapping env + rate limit fields (response-only).'
+      properties:
+        UserId:
+          type: integer
+          title: Userid
+          description: System-generated HHA user ID
+        UserName:
+          type: string
+          title: Username
+          description: System-generated user name
+        AgencyId:
+          type: integer
+          title: Agencyid
+          description: Agency identifier
+        Env:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Env
+          description: HHA environment stored on this mapping (app, app2, cloud)
+        ProviderTaxId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providertaxid
+          description: Federal tax number from HHA for this agency in this Env (response only)
+        RateLimit:
+          type: integer
+          title: Ratelimit
+          description: Allowed requests per RateLimitWindow for this agency
+        RateLimitWindow:
+          type: string
+          enum:
+          - Second
+          - Minute
+          title: Ratelimitwindow
+          description: Rate window granularity (Second, Minute)
+    ClientUpdateRequest:
+      type: object
+      title: ClientUpdateRequest
+      description: 'Request schema for updating client onboarding details (env-per-mapping model).
+
+
+        Use `Agencies` for **FhirProvider** / **FhirAggregator** / **FhirThirdParty** mapping
+
+        updates. Use `Payer` (exactly one item) for **FhirPayer** only; do not send
+
+        `Agencies` for those clients. The server reads `ClientType` from the stored client;
+
+        do not send `ClientType` on PATCH.
+
+
+        `Agencies` mirrors the POST `/client` shape: each item carries its own optional
+
+        `Env`. When `Env` is omitted for an item, the server discovers the HHA environment
+
+        for that agency across configured tiers (`dbo.Vendors`). For **FhirPayer**, omitted
+
+        `Env` on `Payer` uses `dbo.tblchhamaster` across mirrors (same rules as POST).
+
+        '
+      example:
+        Agencies:
+        - AgencyId: 123
+          Env: app
+          RateLimit: 100
+          RateLimitWindow: Second
+        - AgencyId: 678
+        Description: HHAx Client
+        RateLimitingPlan: Premium
+        Status: Inactive
+      properties:
+        Description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Client description
+        Agencies:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/AgencyOnboardingInput'
+          - type: 'null'
+          title: Agencies
+          description: Agencies to associate with this client (non-payer client types only); each item may set its own Env or omit it to trigger multi-env discovery
+        Payer:
+          anyOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/PayerOnboardingInput'
+          - type: 'null'
+          title: Payer
+          description: 'Payer mapping for ClientType FhirPayer only: exactly one item with PayerId (optional Env, RateLimit, RateLimitWindow). Omit when not changing mappings.'
+        RateLimitingPlan:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ratelimitingplan
+          description: Rate limiting plan (Basic, Premium) - case insensitive
+        Status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Client status (Active, Inactive) - case insensitive
+    ClientMigrateRequest:
+      type: object
+      required:
+      - ClientId
+      - ClientName
+      - ClientType
+      - XApiKey
+      - Agencies
+      title: ClientMigrateRequest
+      description: Request schema for migrating a client (data migration API).
+      example:
+        Agencies:
+        - AgencyId: 123
+          Env: app
+          RateLimit: 50
+          RateLimitWindow: Minute
+        - AgencyId: 456
+        - AgencyId: 789
+          Env: cloud
+          RateLimit: 50
+          RateLimitWindow: Minute
+        ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+        ClientName: Migrated Client One
+        ClientType: FhirProvider
+        Description: Migrated from legacy
+        RateLimitingPlan: Basic
+        Status: Active
+        XApiKey: brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998
+      properties:
+        ClientId:
+          type: string
+          minLength: 1
+          title: Clientid
+          description: Client identifier (UUID) to migrate
+        ClientName:
+          type: string
+          minLength: 1
+          title: Clientname
+          description: Name of the client
+        ClientType:
+          type: string
+          enum:
+          - FhirProvider
+          - FhirAggregator
+          - FhirThirdParty
+          - FhirPayer
+          title: Clienttype
+          description: Type of FHIR client (FhirProvider, FhirAggregator, FhirThirdParty, FhirPayer)
+        XApiKey:
+          type: string
+          minLength: 1
+          title: Xapikey
+          description: API key to store for this client (from Identity/ClientVendors)
+        Agencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgencyOnboardingInput'
+          minItems: 1
+          title: Agencies
+          description: Agencies to map after migrate (same shape as create)
+        Description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Client description
+        Status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Client status (Active, Inactive) - default Active
+          default: Active
+        RateLimitingPlan:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ratelimitingplan
+          description: Rate limiting plan (Basic, Premium) - default Basic
+          default: Basic
+    ClientCreateResponseWrapper:
+      type: object
+      required:
+      - Message
+      - Data
+      title: ClientCreateResponseWrapper
+      description: Wrapper for client create (onboarding) API response.
+      example:
+        Data:
+          AgencyUsers:
+          - AgencyId: 123
+            Env: app
+            ProviderTaxId: 12-3456789
+            RateLimit: 50
+            RateLimitWindow: Minute
+            UserId: -6789
+            UserName: FHIRAPIUser_1_123
+          - AgencyId: 678
+            Env: app2
+            RateLimit: 50
+            RateLimitWindow: Minute
+            UserId: -4567
+            UserName: FHIRAPIUser_1_678
+          - AgencyId: 789
+            Env: cloud
+            RateLimit: 100
+            RateLimitWindow: Second
+            UserId: -8765
+            UserName: FHIRAPIUser_1_789
+          ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+          ClientName: Client 1
+          ClientSecret: 3f9c7a21-82b4-4c91-a8e7-6b4f2c9a1d78
+          ClientType: FhirProvider
+          CreatedAt: '2026-01-12T07:45:30Z'
+          Description: HHAx Client
+          RateLimitingPlan: Basic
+          Status: Active
+          XApiKey: brcRWv6qZQanfxwoZYvuYpMpfTUsvxEnkli2n998
+        Message: Client onboarded successfully
+      properties:
+        Message:
+          type: string
+          title: Message
+          description: Response message
+        Data:
+          $ref: '#/components/schemas/ClientCreateResponse'
+          description: Client onboarding data
+    OnboardingSummary:
+      type: object
+      title: OnboardingSummary
+      description: Present when agencies or payers were skipped or mapped with inactive HHA status.
+      properties:
+        AgencyIds:
+          anyOf:
+          - type: array
+            items:
+              type: integer
+          - type: 'null'
+          title: Agencyids
+          description: Agency or payer IDs from the request that were not mapped (skipped)
+        Message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+          description: Human-readable explanation for skipped agencies or payers
+        InactiveAgencyIds:
+          anyOf:
+          - type: array
+            items:
+              type: integer
+          - type: 'null'
+          title: Inactiveagencyids
+          description: Agency IDs that were mapped but have inactive status in HHA (non-FhirPayer clients)
+        InactivePayerId:
+          anyOf:
+          - type: array
+            items:
+              type: integer
+          - type: 'null'
+          title: Inactivepayerid
+          description: Payer (Chha) IDs that were mapped but have inactive status in dbo.tblchhamaster (FhirPayer clients only)
+        InactiveMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Inactivemessage
+          description: Human-readable note when mapped rows are inactive in HHA (agency wording for providers; payer wording for FhirPayer)
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.hhaexchange.com/v1/fhir/auth/token
+          scopes:
+            full_access: Read and write access for Internal Provider, Onboarding, and Rate limits.

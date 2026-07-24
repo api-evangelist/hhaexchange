@@ -1,0 +1,373 @@
+openapi: 3.1.0
+info:
+  title: HHAeXchange FHIR Configuration Internal API
+  description: '## APIs
+
+
+    **Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.
+
+
+    **Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.
+
+
+    **Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.
+
+
+    **Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.
+
+
+    **Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.
+
+
+    ## Authentication
+
+
+    **OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.
+
+    '
+  version: 0.1.0
+servers:
+- url: https://api.hhaexchange.com
+  description: HHAeXchange FHIR API
+tags:
+- name: Internal
+paths:
+  /v1/internal/provider:
+    get:
+      tags:
+      - Internal
+      summary: Get provider details
+      description: Returns base URL, provider and user details, environment, and validation. Client ID, API key, and ProviderTaxId are required. Environment and HHA session use ClientMappings.Env for the resolved agency. AppVersionId is optional; when omitted, BaseUrl, ProviderVersion, and ProviderMinorVersion are null; ProviderId is the resolved VendorID (same as Validation.VendorID).
+      operationId: get_provider_v1_internal_provider_get
+      parameters:
+      - name: ClientId
+        in: query
+        required: true
+        description: Client ID (mandatory)
+        schema:
+          type: string
+          description: Client ID (mandatory)
+          title: Clientid
+      - name: XApiKey
+        in: query
+        required: true
+        description: API key (mandatory)
+        schema:
+          type: string
+          description: API key (mandatory)
+          title: Xapikey
+      - name: ProviderTaxId
+        in: query
+        required: false
+        description: Provider tax ID (mandatory; resolves agency and mapping env)
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Provider tax ID (mandatory; resolves agency and mapping env)
+          title: Providertaxid
+      - name: AppVersionId
+        in: query
+        required: false
+        description: One or more app version IDs (optional; default [35]) for URL lookup.
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: integer
+          - type: 'null'
+          description: One or more app version IDs (optional; default [35]) for URL lookup.
+          title: Appversionid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+  /v1/internal/generic-references:
+    get:
+      tags:
+      - Internal
+      summary: Get generic references
+      description: Returns generic references from HHA GenericReferences table by CompanyID (ProviderId/VendorId) and ReferenceType. Client ID and API key are required for authentication and to determine the correct HHA database environment. Returns all active reference records matching the specified CompanyID and ReferenceType.
+      operationId: get_generic_references_v1_internal_generic_references_get
+      parameters:
+      - name: ClientId
+        in: query
+        required: true
+        description: Client ID (mandatory)
+        schema:
+          type: string
+          description: Client ID (mandatory)
+          title: Clientid
+      - name: XApiKey
+        in: query
+        required: true
+        description: API key (mandatory)
+        schema:
+          type: string
+          description: API key (mandatory)
+          title: Xapikey
+      - name: ProviderId
+        in: query
+        required: true
+        description: Provider ID / Vendor ID (CompanyID) (mandatory)
+        schema:
+          type: integer
+          description: Provider ID / Vendor ID (CompanyID) (mandatory)
+          title: Providerid
+      - name: ReferenceType
+        in: query
+        required: true
+        description: Reference type (e.g., 'EmergencyContactRelationship') (mandatory)
+        schema:
+          type: string
+          description: Reference type (e.g., 'EmergencyContactRelationship') (mandatory)
+          title: Referencetype
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericReferencesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+  /v1/internal/payer:
+    get:
+      tags:
+      - Internal
+      summary: Get payer details (FHIR Aggregator or FhirPayer)
+      description: 'Validates ClientId and XApiKey against FHIR.Clients. The client must have ClientType FhirAggregator or FhirPayer. FhirProvider clients receive **400** with "ProviderTaxId is required" (use GET /v1/internal/provider). Returns the first active ClientMappings row (lowest Id): PayerId and Validation.PayerID are AgencyId (payer/agency in HHA), and Environment is derived from the mapping Env. BaseUrl is always null.'
+      operationId: get_payer_v1_internal_payer_get
+      parameters:
+      - name: ClientId
+        in: query
+        required: true
+        description: Client ID (mandatory)
+        schema:
+          type: string
+          description: Client ID (mandatory)
+          title: Clientid
+      - name: XApiKey
+        in: query
+        required: true
+        description: API key (mandatory)
+        schema:
+          type: string
+          description: API key (mandatory)
+          title: Xapikey
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayerDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - bearerAuth:
+        - full_access
+components:
+  schemas:
+    GenericReferenceItem:
+      type: object
+      required:
+      - ReferenceCode
+      - Seq
+      title: GenericReferenceItem
+      description: Single generic reference item from GenericReferences table.
+      properties:
+        ReferenceCode:
+          type: string
+          title: Referencecode
+        Seq:
+          type: integer
+          title: Seq
+        ReferenceValue:
+          type: string
+          title: Referencevalue
+          default: ''
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+    GenericReferencesResponse:
+      type: object
+      required:
+      - CompanyID
+      - ReferenceType
+      title: GenericReferencesResponse
+      description: 'Response for GET /internal/generic-references: list of generic references by CompanyID and ReferenceType.'
+      properties:
+        CompanyID:
+          type: integer
+          title: Companyid
+        ReferenceType:
+          type: string
+          title: Referencetype
+        References:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericReferenceItem'
+          title: References
+          default: []
+    ProviderDetailsResponse:
+      type: object
+      title: ProviderDetailsResponse
+      description: 'Response for GET /internal/provider: base URL, provider and user details, environment, validation.'
+      properties:
+        Message:
+          type: string
+          title: Message
+          default: ''
+        ClientId:
+          type: string
+          title: Clientid
+          default: ''
+        XApiKey:
+          type: string
+          title: Xapikey
+          default: ''
+        BaseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        ProviderVersion:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Providerversion
+        ProviderMinorVersion:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Providerminorversion
+        ProviderId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Providerid
+        ProviderTaxId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Providertaxid
+        UserId:
+          type: integer
+          title: Userid
+          default: 0
+        UserName:
+          type: string
+          title: Username
+          default: ''
+        Environment:
+          type: string
+          title: Environment
+          default: ''
+        Validation:
+          type: object
+          additionalProperties: true
+          title: Validation
+          default: {}
+    PayerDetailsResponse:
+      type: object
+      title: PayerDetailsResponse
+      description: 'Response for GET /internal/payer: aggregator client, first active mapping as payer context.'
+      properties:
+        Message:
+          type: string
+          title: Message
+          default: ''
+        ClientId:
+          type: string
+          title: Clientid
+          default: ''
+        XApiKey:
+          type: string
+          title: Xapikey
+          default: ''
+        BaseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        PayerId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Payerid
+        UserId:
+          type: integer
+          title: Userid
+          default: 0
+        UserName:
+          type: string
+          title: Username
+          default: ''
+        Environment:
+          type: string
+          title: Environment
+          default: ''
+        Validation:
+          type: object
+          additionalProperties: true
+          title: Validation
+          default: {}
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.hhaexchange.com/v1/fhir/auth/token
+          scopes:
+            full_access: Read and write access for Internal Provider, Onboarding, and Rate limits.
