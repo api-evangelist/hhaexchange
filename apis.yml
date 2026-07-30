@@ -1,6 +1,19 @@
 name: HHAeXchange
 description: Homecare management platform with a REST API for scheduling aide visits, verifying care delivery via telephony and mobile, managing authorizations, and processing Medicaid billing. Provides EVV (Electronic Visit Verification) APIs for third-party integration with state Medicaid systems.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hhaexchange.png
 url: https://raw.githubusercontent.com/api-evangelist/hhaexchange/refs/heads/main/apis.yml
 created: 2026-06-13
 modified: 2026-06-13
@@ -16,36 +29,93 @@ tags:
   - Caregiver
   - Healthcare
 apis:
-  - name: HHAeXchange EVV API
-    description: RESTful HTTPS API for Electronic Visit Verification enabling third-party EVV systems to submit caregiver and visit records to HHAeXchange for Medicaid billing and state compliance. Supports caregiver management, visit submission, and transaction status checks.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
-    baseURL: https://api.hhaexchange.com
-    tags:
-      - EVV
-      - Electronic Visit Verification
-      - Caregiver
-      - Visits
-      - Medicaid
-    properties:
-      - type: Documentation
-        url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
-      - type: APIWorkflow
-        url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Workflow-Endpoints-P.htm
-      - type: GettingStarted
-        url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm
-      - type: ErrorCodes
-        url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-HTTP-Response-Status-Codes-P.htm
-      - type: Status
-        url: https://hhaexchange.statuspage.io/
-      - type: Plans
-        url: plans/hhaexchange-plans-pricing.yml
-      - type: RateLimits
-        url: rate-limits/hhaexchange-rate-limits.yml
-      - type: FinOps
-        url: finops/hhaexchange-finops.yml
-      - type: OpenAPI
-        url: openapi/hhaexchange-fhir-openapi.yml
+- aid: hhaexchange:hhaexchange-configuration-api
+  name: HHAeXchange Configuration API
+  description: The Configuration API from HHAeXchange — 1 operation(s) for configuration.
+  humanURL: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
+  baseURL: https://api.hhaexchange.com
+  tags:
+  - Configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/hhaexchange-configuration-api-openapi.yml
+  - type: Documentation
+    url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
+  - type: APIWorkflow
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Workflow-Endpoints-P.htm
+  - type: GettingStarted
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm
+  - type: ErrorCodes
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-HTTP-Response-Status-Codes-P.htm
+  - type: Status
+    url: https://hhaexchange.statuspage.io/
+  - type: Plans
+    url: plans/hhaexchange-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/hhaexchange-rate-limits.yml
+  - type: FinOps
+    url: finops/hhaexchange-finops.yml
+- aid: hhaexchange:hhaexchange-internal-api
+  name: HHAeXchange Internal API
+  description: The Internal API from HHAeXchange — 3 operation(s) for internal.
+  humanURL: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
+  baseURL: https://api.hhaexchange.com
+  tags:
+  - Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/hhaexchange-internal-api-openapi.yml
+  - type: Documentation
+    url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
+  - type: APIWorkflow
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Workflow-Endpoints-P.htm
+  - type: GettingStarted
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm
+  - type: ErrorCodes
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-HTTP-Response-Status-Codes-P.htm
+  - type: Status
+    url: https://hhaexchange.statuspage.io/
+  - type: Plans
+    url: plans/hhaexchange-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/hhaexchange-rate-limits.yml
+  - type: FinOps
+    url: finops/hhaexchange-finops.yml
+- aid: hhaexchange:hhaexchange-onboarding-api
+  name: HHAeXchange Onboarding API
+  description: The Onboarding API from HHAeXchange — 3 operation(s) for onboarding.
+  humanURL: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
+  baseURL: https://api.hhaexchange.com
+  tags:
+  - Onboarding
+  properties:
+  - type: OpenAPI
+    url: openapi/hhaexchange-onboarding-api-openapi.yml
+  - type: Documentation
+    url: https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm
+  - type: APIWorkflow
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Workflow-Endpoints-P.htm
+  - type: GettingStarted
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm
+  - type: ErrorCodes
+    url: >-
+      https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-HTTP-Response-Status-Codes-P.htm
+  - type: Status
+    url: https://hhaexchange.statuspage.io/
+  - type: Plans
+    url: plans/hhaexchange-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/hhaexchange-rate-limits.yml
+  - type: FinOps
+    url: finops/hhaexchange-finops.yml
 common:
   - type: AgenticAccess
     url: agentic-access/hhaexchange-agentic-access.yml
