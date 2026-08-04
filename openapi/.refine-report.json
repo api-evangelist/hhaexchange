@@ -1,0 +1,18 @@
+{
+  "provider": "hhaexchange",
+  "sources": [
+    "hhaexchange-configuration-api-openapi.yml",
+    "hhaexchange-internal-api-openapi.yml",
+    "hhaexchange-onboarding-api-openapi.yml"
+  ],
+  "outputs": [
+    "hhaexchange-configuration-api-openapi.yml",
+    "hhaexchange-internal-api-openapi.yml",
+    "hhaexchange-onboarding-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
