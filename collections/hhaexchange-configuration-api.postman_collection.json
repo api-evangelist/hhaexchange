@@ -1,0 +1,220 @@
+{
+  "item": [
+    {
+      "id": "2b015654-c101-4481-b9be-05969e0d3fc5",
+      "name": "Configuration",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "35af9aa8-e7b2-47e1-ba69-884663c6485d",
+          "name": "Get Rate Limit Configuration",
+          "request": {
+            "name": "Get Rate Limit Configuration",
+            "description": {
+              "content": "Retrieve the rate limit configuration for a specific client, agency, and environment combination. The triple (ClientId, AgencyId, Env) uniquely identifies one ClientMapping row on SB/PROD. On QA/IMPL (single HHA mirror), the resolved mapping may use a different stored Env than the query parameter; see response `Data.Env`. Returns the per-second or per-minute request limit stored on that mapping. Falls back to application defaults (50 / Minute) when no explicit configuration has been saved.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "rate-limits",
+                "config"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ClientId",
+                  "value": "<string>",
+                  "description": "FHIR client UUID (required). Example: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45"
+                },
+                {
+                  "disabled": false,
+                  "key": "AgencyId",
+                  "value": "<string>",
+                  "description": "Agency (vendor) identifier — required; must be a positive integer"
+                },
+                {
+                  "disabled": false,
+                  "key": "Env",
+                  "value": "<string>",
+                  "description": "HHA environment (required): app, app2, or cloud"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9a72d17f-7391-4fca-905d-c4049c8e515d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rate-limits",
+                    "config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "AgencyId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "Env",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Data\": {\n    \"Agency\": {\n      \"AgencyId\": 123,\n      \"RateLimit\": 50\n    },\n    \"ClientId\": \"9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45\",\n    \"ClientMappingId\": 10123,\n    \"Env\": \"app\",\n    \"RateLimitWindow\": \"Minute\"\n  },\n  \"Message\": \"Rate limiting configuration fetched successfully\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c96ee1da-86a3-482f-971c-b3b9d30f268e",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rate-limits",
+                    "config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "AgencyId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "Env",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.hhaexchange.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8f17ad4e-f30e-4807-8de9-716e6a88b705",
+    "name": "HHAeXchange FHIR Configuration API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## APIs\n\n**Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.\n\n**Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.\n\n**Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.\n\n**Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.\n\n**Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.\n\n## Authentication\n\n**OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.\n",
+      "type": "text/plain"
+    }
+  }
+}

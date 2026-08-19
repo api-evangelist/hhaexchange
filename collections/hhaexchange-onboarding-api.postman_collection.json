@@ -1,0 +1,748 @@
+{
+  "item": [
+    {
+      "id": "a39813f1-55d0-46f7-8853-e8b23371bb8b",
+      "name": "Onboarding",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d2f8fbbf-fc43-4dca-aac0-b120fa2164c6",
+          "name": "Create Client (Onboarding)",
+          "request": {
+            "name": "Create Client (Onboarding)",
+            "description": {
+              "content": "Onboard a new FHIR client (same endpoint for all client types). Generates ClientId and ClientSecret; ClientSecret is returned once. In Swagger, open **Request body** → **Examples** and choose **FhirProvider** (Agencies payload) or **FhirPayer** (Payer payload) to load the matching JSON.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "fhir-onboarding",
+                "client"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ClientName\": \"<string>\",\n  \"ClientType\": \"<string>\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    },\n    {\n      \"AgencyId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    }\n  ],\n  \"Payer\": [\n    {\n      \"PayerId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    },\n    {\n      \"PayerId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    }\n  ],\n  \"Description\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f0d91de9-fee9-40cc-823a-4e9eac13df55",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ClientName\": \"Client 1\",\n  \"ClientType\": \"FhirProvider\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": 123,\n      \"Env\": \"app\",\n      \"RateLimit\": 50,\n      \"RateLimitWindow\": \"Minute\"\n    },\n    {\n      \"AgencyId\": 678\n    },\n    {\n      \"AgencyId\": 789,\n      \"Env\": \"cloud\",\n      \"RateLimit\": 50,\n      \"RateLimitWindow\": \"Minute\"\n    }\n  ],\n  \"Description\": \"HHAx Client\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Message\": \"string\",\n  \"Data\": {\n    \"ClientId\": \"string\",\n    \"ClientName\": \"string\",\n    \"ClientSecret\": \"string\",\n    \"ClientType\": \"string\",\n    \"Status\": \"string\",\n    \"RateLimitingPlan\": \"string\",\n    \"Description\": \"string\",\n    \"AgencyUsers\": [\n      {\n        \"UserId\": 7176,\n        \"UserName\": \"string\",\n        \"AgencyId\": 2654,\n        \"RateLimit\": 4231,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      },\n      {\n        \"UserId\": 9220,\n        \"UserName\": \"string\",\n        \"AgencyId\": 3217,\n        \"RateLimit\": 5220,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      }\n    ],\n    \"PayerUser\": [\n      {\n        \"UserId\": 8385,\n        \"UserName\": \"string\",\n        \"PayerId\": 7123,\n        \"RateLimit\": 5720,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\"\n      },\n      {\n        \"UserId\": 8770,\n        \"UserName\": \"string\",\n        \"PayerId\": 9968,\n        \"RateLimit\": 744,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\"\n      }\n    ],\n    \"OnboardingSummary\": {\n      \"AgencyIds\": [\n        6505,\n        3499\n      ],\n      \"Message\": \"string\",\n      \"InactiveAgencyIds\": [\n        2014,\n        4856\n      ],\n      \"InactivePayerId\": [\n        4591,\n        8577\n      ],\n      \"InactiveMessage\": \"string\"\n    },\n    \"XApiKey\": \"string\",\n    \"CreatedAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0daf5ad4-ce18-4b12-8eb6-a49fe6acbfcb",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ClientName\": \"Client 1\",\n  \"ClientType\": \"FhirProvider\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": 123,\n      \"Env\": \"app\",\n      \"RateLimit\": 50,\n      \"RateLimitWindow\": \"Minute\"\n    },\n    {\n      \"AgencyId\": 678\n    },\n    {\n      \"AgencyId\": 789,\n      \"Env\": \"cloud\",\n      \"RateLimit\": 50,\n      \"RateLimitWindow\": \"Minute\"\n    }\n  ],\n  \"Description\": \"HHAx Client\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "db9b33b9-5705-4648-a885-349b56fe02af",
+          "name": "Migrate Client (Data Migration)",
+          "request": {
+            "name": "Migrate Client (Data Migration)",
+            "description": {
+              "content": "Migrate one client with provided ClientId, XApiKey, and agencies. Creates FHIR.Clients, HHA users, and FHIR.ClientMappings. No AWS key creation, no IDP write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "fhir-onboarding",
+                "client",
+                "migrate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ClientId\": \"<string>\",\n  \"ClientName\": \"<string>\",\n  \"ClientType\": \"<string>\",\n  \"XApiKey\": \"<string>\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    }\n  ],\n  \"Description\": \"<string>\",\n  \"Status\": \"<string>\",\n  \"RateLimitingPlan\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "acbb70f0-f510-40bc-8b54-e2c6c8ff9b7a",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client",
+                    "migrate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ClientId\": \"<string>\",\n  \"ClientName\": \"<string>\",\n  \"ClientType\": \"<string>\",\n  \"XApiKey\": \"<string>\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": 5340,\n      \"Env\": \"string\",\n      \"RateLimit\": 5539,\n      \"RateLimitWindow\": \"string\"\n    }\n  ],\n  \"Description\": \"<string>\",\n  \"Status\": \"<string>\",\n  \"RateLimitingPlan\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Message\": \"string\",\n  \"Data\": {\n    \"ClientId\": \"string\",\n    \"ClientName\": \"string\",\n    \"ClientType\": \"string\",\n    \"Status\": \"string\",\n    \"Description\": \"string\",\n    \"AgencyUsers\": [\n      {\n        \"UserId\": 5300,\n        \"UserName\": \"string\",\n        \"AgencyId\": 1619,\n        \"RateLimit\": 9725,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      },\n      {\n        \"UserId\": 3908,\n        \"UserName\": \"string\",\n        \"AgencyId\": 3131,\n        \"RateLimit\": 8970,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      }\n    ],\n    \"PayerUser\": [\n      {\n        \"UserId\": 7003,\n        \"UserName\": \"string\",\n        \"PayerId\": 3746,\n        \"RateLimit\": 7436,\n        \"RateLimitWindow\": \"Minute\",\n        \"Env\": \"string\"\n      },\n      {\n        \"UserId\": 9206,\n        \"UserName\": \"string\",\n        \"PayerId\": 4021,\n        \"RateLimit\": 3128,\n        \"RateLimitWindow\": \"Minute\",\n        \"Env\": \"string\"\n      }\n    ],\n    \"OnboardingSummary\": {\n      \"AgencyIds\": [\n        2782,\n        5887\n      ],\n      \"Message\": \"string\",\n      \"InactiveAgencyIds\": [\n        7050,\n        3778\n      ],\n      \"InactivePayerId\": [\n        2279,\n        1503\n      ],\n      \"InactiveMessage\": \"string\"\n    },\n    \"XApiKey\": \"string\",\n    \"RateLimitingPlan\": \"string\",\n    \"CreatedAt\": \"string\",\n    \"UpdatedAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3dd23d3b-fc08-49d6-be3a-f39dd9894b01",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client",
+                    "migrate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ClientId\": \"<string>\",\n  \"ClientName\": \"<string>\",\n  \"ClientType\": \"<string>\",\n  \"XApiKey\": \"<string>\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": 5340,\n      \"Env\": \"string\",\n      \"RateLimit\": 5539,\n      \"RateLimitWindow\": \"string\"\n    }\n  ],\n  \"Description\": \"<string>\",\n  \"Status\": \"<string>\",\n  \"RateLimitingPlan\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "22738cca-4fe6-4ad2-a568-f7f53b9ade4c",
+          "name": "Get Client Onboarding Details",
+          "request": {
+            "name": "Get Client Onboarding Details",
+            "description": {
+              "content": "Retrieve the complete onboarding configuration for an existing FHIR client.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "fhir-onboarding",
+                "client",
+                ":client_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "client_id",
+                  "description": "(Required) Unique identifier of the client whose onboarding details are to be retrieved"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ffdc5f0d-0b30-41f7-8057-bddb20b1248b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client",
+                    ":client_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "client_id",
+                      "description": "(Required) Unique identifier of the client whose onboarding details are to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Message\": \"string\",\n  \"Data\": {\n    \"ClientId\": \"string\",\n    \"ClientName\": \"string\",\n    \"ClientType\": \"string\",\n    \"Status\": \"string\",\n    \"Description\": \"string\",\n    \"AgencyUsers\": [\n      {\n        \"UserId\": 4182,\n        \"UserName\": \"string\",\n        \"AgencyId\": 9462,\n        \"RateLimit\": 684,\n        \"RateLimitWindow\": \"Minute\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      },\n      {\n        \"UserId\": 9393,\n        \"UserName\": \"string\",\n        \"AgencyId\": 1609,\n        \"RateLimit\": 1222,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      }\n    ],\n    \"PayerUser\": [\n      {\n        \"UserId\": 2193,\n        \"UserName\": \"string\",\n        \"PayerId\": 8660,\n        \"RateLimit\": 2748,\n        \"RateLimitWindow\": \"Minute\",\n        \"Env\": \"string\"\n      },\n      {\n        \"UserId\": 9899,\n        \"UserName\": \"string\",\n        \"PayerId\": 4902,\n        \"RateLimit\": 2671,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\"\n      }\n    ],\n    \"OnboardingSummary\": {\n      \"AgencyIds\": [\n        1955,\n        9970\n      ],\n      \"Message\": \"string\",\n      \"InactiveAgencyIds\": [\n        138,\n        9871\n      ],\n      \"InactivePayerId\": [\n        8986,\n        2105\n      ],\n      \"InactiveMessage\": \"string\"\n    },\n    \"XApiKey\": \"string\",\n    \"RateLimitingPlan\": \"string\",\n    \"CreatedAt\": \"string\",\n    \"UpdatedAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "270517b0-044c-4886-aefe-f4138ca67ee5",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client",
+                    ":client_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "client_id",
+                      "description": "(Required) Unique identifier of the client whose onboarding details are to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f192dfce-3f34-45a3-8823-787e87b4bfe2",
+          "name": "Update Client Onboarding Details",
+          "request": {
+            "name": "Update Client Onboarding Details",
+            "description": {
+              "content": "Update the onboarding configuration of an existing FHIR client. Use **Agencies** for FhirProvider / FhirAggregator / FhirThirdParty mapping updates, or **Payer** (exactly one item) for **FhirPayer** clients. In Swagger, open **Request body** → **Examples** to load provider vs payer sample JSON.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "fhir-onboarding",
+                "client",
+                ":client_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "client_id",
+                  "description": "(Required) Unique identifier of the client whose onboarding configuration is being updated"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Description\": \"<string>\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    },\n    {\n      \"AgencyId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    }\n  ],\n  \"Payer\": [\n    {\n      \"PayerId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    },\n    {\n      \"PayerId\": \"<integer>\",\n      \"Env\": \"<string>\",\n      \"RateLimit\": \"<integer>\",\n      \"RateLimitWindow\": \"<string>\"\n    }\n  ],\n  \"RateLimitingPlan\": \"<string>\",\n  \"Status\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "18d2bbf1-6ded-45a6-afe7-c090c0880b7b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client",
+                    ":client_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "client_id",
+                      "description": "(Required) Unique identifier of the client whose onboarding configuration is being updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Description\": \"HHAx Client\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": 123,\n      \"Env\": \"app\",\n      \"RateLimit\": 100,\n      \"RateLimitWindow\": \"Second\"\n    },\n    {\n      \"AgencyId\": 678\n    }\n  ],\n  \"RateLimitingPlan\": \"Premium\",\n  \"Status\": \"Inactive\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Message\": \"string\",\n  \"Data\": {\n    \"ClientId\": \"string\",\n    \"ClientName\": \"string\",\n    \"ClientType\": \"string\",\n    \"Status\": \"string\",\n    \"Description\": \"string\",\n    \"AgencyUsers\": [\n      {\n        \"UserId\": 2456,\n        \"UserName\": \"string\",\n        \"AgencyId\": 8156,\n        \"RateLimit\": 7345,\n        \"RateLimitWindow\": \"Second\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      },\n      {\n        \"UserId\": 9593,\n        \"UserName\": \"string\",\n        \"AgencyId\": 8396,\n        \"RateLimit\": 8525,\n        \"RateLimitWindow\": \"Minute\",\n        \"Env\": \"string\",\n        \"ProviderTaxId\": \"string\"\n      }\n    ],\n    \"PayerUser\": [\n      {\n        \"UserId\": 5307,\n        \"UserName\": \"string\",\n        \"PayerId\": 5837,\n        \"RateLimit\": 7068,\n        \"RateLimitWindow\": \"Minute\",\n        \"Env\": \"string\"\n      },\n      {\n        \"UserId\": 1483,\n        \"UserName\": \"string\",\n        \"PayerId\": 1703,\n        \"RateLimit\": 7697,\n        \"RateLimitWindow\": \"Minute\",\n        \"Env\": \"string\"\n      }\n    ],\n    \"OnboardingSummary\": {\n      \"AgencyIds\": [\n        732,\n        2870\n      ],\n      \"Message\": \"string\",\n      \"InactiveAgencyIds\": [\n        4848,\n        8016\n      ],\n      \"InactivePayerId\": [\n        228,\n        9292\n      ],\n      \"InactiveMessage\": \"string\"\n    },\n    \"XApiKey\": \"string\",\n    \"RateLimitingPlan\": \"string\",\n    \"CreatedAt\": \"string\",\n    \"UpdatedAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "13f8f094-1a44-44f1-9657-f3d29e6ff269",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "fhir-onboarding",
+                    "client",
+                    ":client_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "client_id",
+                      "description": "(Required) Unique identifier of the client whose onboarding configuration is being updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Description\": \"HHAx Client\",\n  \"Agencies\": [\n    {\n      \"AgencyId\": 123,\n      \"Env\": \"app\",\n      \"RateLimit\": 100,\n      \"RateLimitWindow\": \"Second\"\n    },\n    {\n      \"AgencyId\": 678\n    }\n  ],\n  \"RateLimitingPlan\": \"Premium\",\n  \"Status\": \"Inactive\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.hhaexchange.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "af623b96-f659-4e93-b584-80aaa49b9f29",
+    "name": "HHAeXchange FHIR Configuration Onboarding API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## APIs\n\n**Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.\n\n**Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.\n\n**Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.\n\n**Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.\n\n**Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.\n\n## Authentication\n\n**OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.\n",
+      "type": "text/plain"
+    }
+  }
+}

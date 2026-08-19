@@ -1,0 +1,144 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "HHAeXchange FHIR Configuration Internal API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Internal",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get provider details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.hhaexchange.com/v1/internal/provider",
+            "params": [
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "query",
+                "description": "Client ID (mandatory)"
+              },
+              {
+                "name": "XApiKey",
+                "value": "",
+                "type": "query",
+                "description": "API key (mandatory)"
+              },
+              {
+                "name": "ProviderTaxId",
+                "value": "",
+                "type": "query",
+                "description": "Provider tax ID (mandatory; resolves agency and mapping env)"
+              },
+              {
+                "name": "AppVersionId",
+                "value": "",
+                "type": "query",
+                "description": "One or more app version IDs (optional; default [35]) for URL lookup."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns base URL, provider and user details, environment, and validation. Client ID, API key, and ProviderTaxId are required. Environment and HHA session use ClientMappings.Env for the resolved agency. AppVersionId is optional; when omitted, BaseUrl, ProviderVersion, and ProviderMinorVersion are null; ProviderId is the resolved VendorID (same as Validation.VendorID)."
+        },
+        {
+          "info": {
+            "name": "Get generic references",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.hhaexchange.com/v1/internal/generic-references",
+            "params": [
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "query",
+                "description": "Client ID (mandatory)"
+              },
+              {
+                "name": "XApiKey",
+                "value": "",
+                "type": "query",
+                "description": "API key (mandatory)"
+              },
+              {
+                "name": "ProviderId",
+                "value": "",
+                "type": "query",
+                "description": "Provider ID / Vendor ID (CompanyID) (mandatory)"
+              },
+              {
+                "name": "ReferenceType",
+                "value": "",
+                "type": "query",
+                "description": "Reference type (e.g., 'EmergencyContactRelationship') (mandatory)"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns generic references from HHA GenericReferences table by CompanyID (ProviderId/VendorId) and ReferenceType. Client ID and API key are required for authentication and to determine the correct HHA database environment. Returns all active reference records matching the specified CompanyID and ReferenceType."
+        },
+        {
+          "info": {
+            "name": "Get payer details (FHIR Aggregator or FhirPayer)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.hhaexchange.com/v1/internal/payer",
+            "params": [
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "query",
+                "description": "Client ID (mandatory)"
+              },
+              {
+                "name": "XApiKey",
+                "value": "",
+                "type": "query",
+                "description": "API key (mandatory)"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Validates ClientId and XApiKey against FHIR.Clients. The client must have ClientType FhirAggregator or FhirPayer. FhirProvider clients receive **400** with \"ProviderTaxId is required\" (use GET /v1/internal/provider). Returns the first active ClientMappings row (lowest Id): PayerId and Validation.PayerID are AgencyId (payer/agency in HHA), and Environment is derived from the mapping Env. BaseUrl is always null."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

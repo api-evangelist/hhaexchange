@@ -1,0 +1,624 @@
+{
+  "item": [
+    {
+      "id": "5cad24d4-152c-4bf5-ba88-951cacdd961c",
+      "name": "Internal",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "aeb7938b-72d2-4a14-9c18-95a9724091a8",
+          "name": "Get provider details",
+          "request": {
+            "name": "Get provider details",
+            "description": {
+              "content": "Returns base URL, provider and user details, environment, and validation. Client ID, API key, and ProviderTaxId are required. Environment and HHA session use ClientMappings.Env for the resolved agency. AppVersionId is optional; when omitted, BaseUrl, ProviderVersion, and ProviderMinorVersion are null; ProviderId is the resolved VendorID (same as Validation.VendorID).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "internal",
+                "provider"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ClientId",
+                  "value": "<string>",
+                  "description": "(Required) Client ID (mandatory)"
+                },
+                {
+                  "disabled": false,
+                  "key": "XApiKey",
+                  "value": "<string>",
+                  "description": "(Required) API key (mandatory)"
+                },
+                {
+                  "disabled": false,
+                  "key": "ProviderTaxId",
+                  "value": "<string>",
+                  "description": "Provider tax ID (mandatory; resolves agency and mapping env)"
+                },
+                {
+                  "disabled": false,
+                  "key": "AppVersionId",
+                  "value": "<integer>",
+                  "description": "One or more app version IDs (optional; default [35]) for URL lookup."
+                },
+                {
+                  "disabled": false,
+                  "key": "AppVersionId",
+                  "value": "<integer>",
+                  "description": "One or more app version IDs (optional; default [35]) for URL lookup."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "276eb474-1f6c-4117-ba8f-41f6ee85d379",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "internal",
+                    "provider"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "XApiKey",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ProviderTaxId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "AppVersionId",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "AppVersionId",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Message\": \"\",\n  \"ClientId\": \"\",\n  \"XApiKey\": \"\",\n  \"BaseUrl\": \"string\",\n  \"ProviderVersion\": 2220.8495612070747,\n  \"ProviderMinorVersion\": 3318.898951992407,\n  \"ProviderId\": 8751,\n  \"ProviderTaxId\": \"string\",\n  \"UserId\": 0,\n  \"UserName\": \"\",\n  \"Environment\": \"\",\n  \"Validation\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4a942c47-d446-42d0-88fa-e791b3b60391",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "internal",
+                    "provider"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "XApiKey",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ProviderTaxId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "AppVersionId",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "AppVersionId",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2a015f9e-fb8a-44a4-a894-242371652171",
+          "name": "Get generic references",
+          "request": {
+            "name": "Get generic references",
+            "description": {
+              "content": "Returns generic references from HHA GenericReferences table by CompanyID (ProviderId/VendorId) and ReferenceType. Client ID and API key are required for authentication and to determine the correct HHA database environment. Returns all active reference records matching the specified CompanyID and ReferenceType.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "internal",
+                "generic-references"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ClientId",
+                  "value": "<string>",
+                  "description": "(Required) Client ID (mandatory)"
+                },
+                {
+                  "disabled": false,
+                  "key": "XApiKey",
+                  "value": "<string>",
+                  "description": "(Required) API key (mandatory)"
+                },
+                {
+                  "disabled": false,
+                  "key": "ProviderId",
+                  "value": "<integer>",
+                  "description": "(Required) Provider ID / Vendor ID (CompanyID) (mandatory)"
+                },
+                {
+                  "disabled": false,
+                  "key": "ReferenceType",
+                  "value": "<string>",
+                  "description": "(Required) Reference type (e.g., 'EmergencyContactRelationship') (mandatory)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "734a48cf-3374-4727-9952-670c3eede0c5",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "internal",
+                    "generic-references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "XApiKey",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ProviderId",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "ReferenceType",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"CompanyID\": 3578,\n  \"ReferenceType\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "babfdeac-b43c-49d0-8876-e22076d03852",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "internal",
+                    "generic-references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "XApiKey",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ProviderId",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "ReferenceType",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8449fc66-8130-4b6a-a92c-b631275917a0",
+          "name": "Get payer details (FHIR Aggregator or FhirPayer)",
+          "request": {
+            "name": "Get payer details (FHIR Aggregator or FhirPayer)",
+            "description": {
+              "content": "Validates ClientId and XApiKey against FHIR.Clients. The client must have ClientType FhirAggregator or FhirPayer. FhirProvider clients receive **400** with \"ProviderTaxId is required\" (use GET /v1/internal/provider). Returns the first active ClientMappings row (lowest Id): PayerId and Validation.PayerID are AgencyId (payer/agency in HHA), and Environment is derived from the mapping Env. BaseUrl is always null.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "internal",
+                "payer"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ClientId",
+                  "value": "<string>",
+                  "description": "(Required) Client ID (mandatory)"
+                },
+                {
+                  "disabled": false,
+                  "key": "XApiKey",
+                  "value": "<string>",
+                  "description": "(Required) API key (mandatory)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "full_access"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://api.hhaexchange.com/v1/fhir/auth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "bd36ac01-5f2f-4162-9c45-461204021342",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "internal",
+                    "payer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "XApiKey",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Message\": \"\",\n  \"ClientId\": \"\",\n  \"XApiKey\": \"\",\n  \"BaseUrl\": \"string\",\n  \"PayerId\": 5459,\n  \"UserId\": 0,\n  \"UserName\": \"\",\n  \"Environment\": \"\",\n  \"Validation\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b072cf64-5ce1-46ff-99a2-c8de32cda683",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "internal",
+                    "payer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ClientId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "XApiKey",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.hhaexchange.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "5ecd0c5e-903b-4152-a632-0b9871b1b7dd",
+    "name": "HHAeXchange FHIR Configuration Internal API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## APIs\n\n**Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.\n\n**Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.\n\n**Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.\n\n**Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.\n\n**Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.\n\n## Authentication\n\n**OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.\n",
+      "type": "text/plain"
+    }
+  }
+}

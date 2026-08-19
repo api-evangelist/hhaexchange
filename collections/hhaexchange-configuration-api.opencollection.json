@@ -1,0 +1,58 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "HHAeXchange FHIR Configuration API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Configuration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Rate Limit Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.hhaexchange.com/v1/rate-limits/config",
+            "params": [
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "query",
+                "description": "FHIR client UUID (required). Example: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45"
+              },
+              {
+                "name": "AgencyId",
+                "value": "",
+                "type": "query",
+                "description": "Agency (vendor) identifier — required; must be a positive integer"
+              },
+              {
+                "name": "Env",
+                "value": "",
+                "type": "query",
+                "description": "HHA environment (required): app, app2, or cloud"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieve the rate limit configuration for a specific client, agency, and environment combination. The triple (ClientId, AgencyId, Env) uniquely identifies one ClientMapping row on SB/PROD. On QA/IMPL (single HHA mirror), the resolved mapping may use a different stored Env than the query parameter; see response `Data.Env`. Returns the per-second or per-minute request limit stored on that mapping. Falls back to application defaults (50 / Minute) when no explicit configuration has been saved."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

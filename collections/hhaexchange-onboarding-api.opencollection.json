@@ -1,0 +1,126 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "HHAeXchange FHIR Configuration Onboarding API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Onboarding",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Client (Onboarding)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.hhaexchange.com/v1/fhir-onboarding/client",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Onboard a new FHIR client (same endpoint for all client types). Generates ClientId and ClientSecret; ClientSecret is returned once. In Swagger, open **Request body** → **Examples** and choose **FhirProvider** (Agencies payload) or **FhirPayer** (Payer payload) to load the matching JSON."
+        },
+        {
+          "info": {
+            "name": "Migrate Client (Data Migration)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.hhaexchange.com/v1/fhir-onboarding/client/migrate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Migrate one client with provided ClientId, XApiKey, and agencies. Creates FHIR.Clients, HHA users, and FHIR.ClientMappings. No AWS key creation, no IDP write."
+        },
+        {
+          "info": {
+            "name": "Get Client Onboarding Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.hhaexchange.com/v1/fhir-onboarding/client/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+                "type": "path",
+                "description": "Unique identifier of the client whose onboarding details are to be retrieved"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieve the complete onboarding configuration for an existing FHIR client."
+        },
+        {
+          "info": {
+            "name": "Update Client Onboarding Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.hhaexchange.com/v1/fhir-onboarding/client/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45",
+                "type": "path",
+                "description": "Unique identifier of the client whose onboarding configuration is being updated"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://api.hhaexchange.com/v1/fhir/auth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Update the onboarding configuration of an existing FHIR client. Use **Agencies** for FhirProvider / FhirAggregator / FhirThirdParty mapping updates, or **Payer** (exactly one item) for **FhirPayer** clients. In Swagger, open **Request body** → **Examples** to load provider vs payer sample JSON."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
