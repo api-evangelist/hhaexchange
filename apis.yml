@@ -21,6 +21,14 @@ specificationVersion: '0.23'
 aid: hhaexchange
 type: Index
 tags:
+  - Home Care
+  - EVV
+  - Electronic Visit Verification
+  - Medicaid
+  - Scheduling
+  - Caregiver
+  - Healthcare
+tags_raw:
   - Homecare
   - EVV
   - Electronic Visit Verification
