@@ -1,5 +1,17 @@
 name: HHAeXchange
 description: Homecare management platform with a REST API for scheduling aide visits, verifying care delivery via telephony and mobile, managing authorizations, and processing Medicaid billing. Provides EVV (Electronic Visit Verification) APIs for third-party integration with state Medicaid systems.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
