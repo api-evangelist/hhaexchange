@@ -137,6 +137,8 @@ apis:
   - type: FinOps
     url: finops/hhaexchange-finops.yml
 common:
+  - type: Website
+    url: https://www.hhaexchange.com/
   - type: AgenticAccess
     url: agentic-access/hhaexchange-agentic-access.yml
   - type: DomainSecurity
