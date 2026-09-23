@@ -1,30 +1,10 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: HHAeXchange FHIR Configuration API
   description: '## APIs
 
 
-    **Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.
-
-
-    **Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.
-
-
-    **Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.
-
-
-    **Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.
-
-
-    **Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.
-
-
-    ## Authentication
-
-
-    **OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.
-
-    '
+    **Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call.'
   version: 0.1.0
 servers:
 - url: https://api.hhaexchange.com
@@ -142,36 +122,6 @@ components:
           type: string
           title: Ratelimitwindow
           description: Rate window granularity (Second, Minute)
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      properties:
-        loc:
-          type: array
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-    HTTPValidationError:
-      type: object
-      title: HTTPValidationError
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
     RateLimitConfigResponse:
       type: object
       required:
@@ -197,6 +147,36 @@ components:
         Data:
           $ref: '#/components/schemas/RateLimitConfigData'
           description: Rate limit configuration
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
   securitySchemes:
     bearerAuth:
       type: oauth2

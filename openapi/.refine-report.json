@@ -1,9 +1,7 @@
 {
   "provider": "hhaexchange",
   "sources": [
-    "hhaexchange-configuration-api-openapi.yml",
-    "hhaexchange-internal-api-openapi.yml",
-    "hhaexchange-onboarding-api-openapi.yml"
+    "_original/hhaexchange-fhir-openapi.yml"
   ],
   "outputs": [
     "hhaexchange-configuration-api-openapi.yml",
@@ -13,6 +11,17 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "hhaexchange-fhir-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "hhaexchange-fhir-openapi.yml: declared missing tag: Configuration",
+    "hhaexchange-fhir-openapi.yml: declared missing tag: Internal",
+    "hhaexchange-fhir-openapi.yml: declared missing tag: Onboarding",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "hhaexchange-configuration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "hhaexchange-internal-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "hhaexchange-onboarding-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

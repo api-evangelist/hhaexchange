@@ -1,30 +1,10 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: HHAeXchange FHIR Configuration Internal API
+  title: HHAeXchange FHIR Internal API
   description: '## APIs
 
 
-    **Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call. Use when you need to resolve provider context for a client.
-
-
-    **Internal (Generic References)** — Returns generic reference data from HHA database by CompanyID and ReferenceType. Use when you need to fetch reference codes and values for a specific provider and reference category.
-
-
-    **Internal (Payer)** — Validates ClientId and XApiKey and returns payer context for **FhirAggregator** or **FhirPayer** clients (first active ClientMappings row by lowest Id). **FhirProvider** clients receive **400** with **ProviderTaxId is required** (use Internal Provider). **PayerId** and **Validation.PayerID** are **AgencyId**. BaseUrl is always null.
-
-
-    **Onboarding API** — Create, Read, Update, and Migrate FHIR clients. Manages client configuration, agency mappings, and API keys.
-
-
-    **Configuration (Rate limits)** — Read per-client/agency/env rate limit configuration.
-
-
-    ## Authentication
-
-
-    **OAuth2 (Bearer)** — Obtain an access token using the client credentials flow from the token endpoint. Send it in the request header as `Authorization: Bearer <token>`. API Gateway validates the token before the request reaches the API.
-
-    '
+    **Internal (Provider)** — Returns base URL, provider and user details, environment, and validation in one call.'
   version: 0.1.0
 servers:
 - url: https://api.hhaexchange.com
@@ -192,74 +172,50 @@ paths:
         - full_access
 components:
   schemas:
-    GenericReferenceItem:
+    PayerDetailsResponse:
       type: object
-      required:
-      - ReferenceCode
-      - Seq
-      title: GenericReferenceItem
-      description: Single generic reference item from GenericReferences table.
+      title: PayerDetailsResponse
+      description: 'Response for GET /internal/payer: aggregator client, first active mapping as payer context.'
       properties:
-        ReferenceCode:
-          type: string
-          title: Referencecode
-        Seq:
-          type: integer
-          title: Seq
-        ReferenceValue:
-          type: string
-          title: Referencevalue
-          default: ''
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      properties:
-        loc:
-          type: array
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-        msg:
+        Message:
           type: string
           title: Message
-        type:
+          default: ''
+        ClientId:
           type: string
-          title: Error Type
-    HTTPValidationError:
-      type: object
-      title: HTTPValidationError
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-    GenericReferencesResponse:
-      type: object
-      required:
-      - CompanyID
-      - ReferenceType
-      title: GenericReferencesResponse
-      description: 'Response for GET /internal/generic-references: list of generic references by CompanyID and ReferenceType.'
-      properties:
-        CompanyID:
+          title: Clientid
+          default: ''
+        XApiKey:
+          type: string
+          title: Xapikey
+          default: ''
+        BaseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        PayerId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Payerid
+        UserId:
           type: integer
-          title: Companyid
-        ReferenceType:
+          title: Userid
+          default: 0
+        UserName:
           type: string
-          title: Referencetype
-        References:
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericReferenceItem'
-          title: References
-          default: []
+          title: Username
+          default: ''
+        Environment:
+          type: string
+          title: Environment
+          default: ''
+        Validation:
+          type: object
+          additionalProperties: true
+          title: Validation
+          default: {}
     ProviderDetailsResponse:
       type: object
       title: ProviderDetailsResponse
@@ -319,50 +275,74 @@ components:
           additionalProperties: true
           title: Validation
           default: {}
-    PayerDetailsResponse:
+    HTTPValidationError:
       type: object
-      title: PayerDetailsResponse
-      description: 'Response for GET /internal/payer: aggregator client, first active mapping as payer context.'
+      title: HTTPValidationError
       properties:
-        Message:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+    GenericReferencesResponse:
+      type: object
+      required:
+      - CompanyID
+      - ReferenceType
+      title: GenericReferencesResponse
+      description: 'Response for GET /internal/generic-references: list of generic references by CompanyID and ReferenceType.'
+      properties:
+        CompanyID:
+          type: integer
+          title: Companyid
+        ReferenceType:
+          type: string
+          title: Referencetype
+        References:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericReferenceItem'
+          title: References
+          default: []
+    GenericReferenceItem:
+      type: object
+      required:
+      - ReferenceCode
+      - Seq
+      title: GenericReferenceItem
+      description: Single generic reference item from GenericReferences table.
+      properties:
+        ReferenceCode:
+          type: string
+          title: Referencecode
+        Seq:
+          type: integer
+          title: Seq
+        ReferenceValue:
+          type: string
+          title: Referencevalue
+          default: ''
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
           type: string
           title: Message
-          default: ''
-        ClientId:
+        type:
           type: string
-          title: Clientid
-          default: ''
-        XApiKey:
-          type: string
-          title: Xapikey
-          default: ''
-        BaseUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Baseurl
-        PayerId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Payerid
-        UserId:
-          type: integer
-          title: Userid
-          default: 0
-        UserName:
-          type: string
-          title: Username
-          default: ''
-        Environment:
-          type: string
-          title: Environment
-          default: ''
-        Validation:
-          type: object
-          additionalProperties: true
-          title: Validation
-          default: {}
+          title: Error Type
   securitySchemes:
     bearerAuth:
       type: oauth2
