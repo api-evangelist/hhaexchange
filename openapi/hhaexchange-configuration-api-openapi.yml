@@ -68,6 +68,15 @@ paths:
         - full_access
 components:
   schemas:
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
     AgencyRateLimitDetail:
       type: object
       required:
@@ -122,6 +131,27 @@ components:
           type: string
           title: Ratelimitwindow
           description: Rate window granularity (Second, Minute)
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
     RateLimitConfigResponse:
       type: object
       required:
@@ -147,36 +177,6 @@ components:
         Data:
           $ref: '#/components/schemas/RateLimitConfigData'
           description: Rate limit configuration
-    HTTPValidationError:
-      type: object
-      title: HTTPValidationError
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      properties:
-        loc:
-          type: array
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
   securitySchemes:
     bearerAuth:
       type: oauth2

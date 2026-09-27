@@ -172,50 +172,6 @@ paths:
         - full_access
 components:
   schemas:
-    PayerDetailsResponse:
-      type: object
-      title: PayerDetailsResponse
-      description: 'Response for GET /internal/payer: aggregator client, first active mapping as payer context.'
-      properties:
-        Message:
-          type: string
-          title: Message
-          default: ''
-        ClientId:
-          type: string
-          title: Clientid
-          default: ''
-        XApiKey:
-          type: string
-          title: Xapikey
-          default: ''
-        BaseUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Baseurl
-        PayerId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Payerid
-        UserId:
-          type: integer
-          title: Userid
-          default: 0
-        UserName:
-          type: string
-          title: Username
-          default: ''
-        Environment:
-          type: string
-          title: Environment
-          default: ''
-        Validation:
-          type: object
-          additionalProperties: true
-          title: Validation
-          default: {}
     ProviderDetailsResponse:
       type: object
       title: ProviderDetailsResponse
@@ -284,44 +240,50 @@ components:
           items:
             $ref: '#/components/schemas/ValidationError'
           title: Detail
-    GenericReferencesResponse:
+    PayerDetailsResponse:
       type: object
-      required:
-      - CompanyID
-      - ReferenceType
-      title: GenericReferencesResponse
-      description: 'Response for GET /internal/generic-references: list of generic references by CompanyID and ReferenceType.'
+      title: PayerDetailsResponse
+      description: 'Response for GET /internal/payer: aggregator client, first active mapping as payer context.'
       properties:
-        CompanyID:
-          type: integer
-          title: Companyid
-        ReferenceType:
+        Message:
           type: string
-          title: Referencetype
-        References:
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericReferenceItem'
-          title: References
-          default: []
-    GenericReferenceItem:
-      type: object
-      required:
-      - ReferenceCode
-      - Seq
-      title: GenericReferenceItem
-      description: Single generic reference item from GenericReferences table.
-      properties:
-        ReferenceCode:
-          type: string
-          title: Referencecode
-        Seq:
-          type: integer
-          title: Seq
-        ReferenceValue:
-          type: string
-          title: Referencevalue
+          title: Message
           default: ''
+        ClientId:
+          type: string
+          title: Clientid
+          default: ''
+        XApiKey:
+          type: string
+          title: Xapikey
+          default: ''
+        BaseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        PayerId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Payerid
+        UserId:
+          type: integer
+          title: Userid
+          default: 0
+        UserName:
+          type: string
+          title: Username
+          default: ''
+        Environment:
+          type: string
+          title: Environment
+          default: ''
+        Validation:
+          type: object
+          additionalProperties: true
+          title: Validation
+          default: {}
     ValidationError:
       type: object
       required:
@@ -343,6 +305,44 @@ components:
         type:
           type: string
           title: Error Type
+    GenericReferenceItem:
+      type: object
+      required:
+      - ReferenceCode
+      - Seq
+      title: GenericReferenceItem
+      description: Single generic reference item from GenericReferences table.
+      properties:
+        ReferenceCode:
+          type: string
+          title: Referencecode
+        Seq:
+          type: integer
+          title: Seq
+        ReferenceValue:
+          type: string
+          title: Referencevalue
+          default: ''
+    GenericReferencesResponse:
+      type: object
+      required:
+      - CompanyID
+      - ReferenceType
+      title: GenericReferencesResponse
+      description: 'Response for GET /internal/generic-references: list of generic references by CompanyID and ReferenceType.'
+      properties:
+        CompanyID:
+          type: integer
+          title: Companyid
+        ReferenceType:
+          type: string
+          title: Referencetype
+        References:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericReferenceItem'
+          title: References
+          default: []
   securitySchemes:
     bearerAuth:
       type: oauth2
