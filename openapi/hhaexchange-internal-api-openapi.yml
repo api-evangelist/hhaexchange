@@ -172,6 +172,100 @@ paths:
         - full_access
 components:
   schemas:
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+    PayerDetailsResponse:
+      type: object
+      title: PayerDetailsResponse
+      description: 'Response for GET /internal/payer: aggregator client, first active mapping as payer context.'
+      properties:
+        Message:
+          type: string
+          title: Message
+          default: ''
+        ClientId:
+          type: string
+          title: Clientid
+          default: ''
+        XApiKey:
+          type: string
+          title: Xapikey
+          default: ''
+        BaseUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baseurl
+        PayerId:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Payerid
+        UserId:
+          type: integer
+          title: Userid
+          default: 0
+        UserName:
+          type: string
+          title: Username
+          default: ''
+        Environment:
+          type: string
+          title: Environment
+          default: ''
+        Validation:
+          type: object
+          additionalProperties: true
+          title: Validation
+          default: {}
+    GenericReferencesResponse:
+      type: object
+      required:
+      - CompanyID
+      - ReferenceType
+      title: GenericReferencesResponse
+      description: 'Response for GET /internal/generic-references: list of generic references by CompanyID and ReferenceType.'
+      properties:
+        CompanyID:
+          type: integer
+          title: Companyid
+        ReferenceType:
+          type: string
+          title: Referencetype
+        References:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericReferenceItem'
+          title: References
+          default: []
     ProviderDetailsResponse:
       type: object
       title: ProviderDetailsResponse
@@ -231,80 +325,6 @@ components:
           additionalProperties: true
           title: Validation
           default: {}
-    HTTPValidationError:
-      type: object
-      title: HTTPValidationError
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-    PayerDetailsResponse:
-      type: object
-      title: PayerDetailsResponse
-      description: 'Response for GET /internal/payer: aggregator client, first active mapping as payer context.'
-      properties:
-        Message:
-          type: string
-          title: Message
-          default: ''
-        ClientId:
-          type: string
-          title: Clientid
-          default: ''
-        XApiKey:
-          type: string
-          title: Xapikey
-          default: ''
-        BaseUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Baseurl
-        PayerId:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Payerid
-        UserId:
-          type: integer
-          title: Userid
-          default: 0
-        UserName:
-          type: string
-          title: Username
-          default: ''
-        Environment:
-          type: string
-          title: Environment
-          default: ''
-        Validation:
-          type: object
-          additionalProperties: true
-          title: Validation
-          default: {}
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      properties:
-        loc:
-          type: array
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
     GenericReferenceItem:
       type: object
       required:
@@ -323,26 +343,6 @@ components:
           type: string
           title: Referencevalue
           default: ''
-    GenericReferencesResponse:
-      type: object
-      required:
-      - CompanyID
-      - ReferenceType
-      title: GenericReferencesResponse
-      description: 'Response for GET /internal/generic-references: list of generic references by CompanyID and ReferenceType.'
-      properties:
-        CompanyID:
-          type: integer
-          title: Companyid
-        ReferenceType:
-          type: string
-          title: Referencetype
-        References:
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericReferenceItem'
-          title: References
-          default: []
   securitySchemes:
     bearerAuth:
       type: oauth2

@@ -68,69 +68,6 @@ paths:
         - full_access
 components:
   schemas:
-    HTTPValidationError:
-      type: object
-      title: HTTPValidationError
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-    AgencyRateLimitDetail:
-      type: object
-      required:
-      - AgencyId
-      - RateLimit
-      title: AgencyRateLimitDetail
-      description: Per-agency portion of the rate limit config response.
-      properties:
-        AgencyId:
-          type: integer
-          title: Agencyid
-          description: Agency (vendor) identifier
-        RateLimit:
-          type: integer
-          title: Ratelimit
-          description: Allowed requests per RateLimitWindow
-    RateLimitConfigData:
-      type: object
-      required:
-      - ClientId
-      - ClientMappingId
-      - Env
-      - Agency
-      - RateLimitWindow
-      title: RateLimitConfigData
-      description: Rate limit configuration for one unique client + agency + env combination.
-      example:
-        Agency:
-          AgencyId: 123
-          RateLimit: 50
-        ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
-        ClientMappingId: 10123
-        Env: app
-        RateLimitWindow: Minute
-      properties:
-        ClientId:
-          type: string
-          title: Clientid
-          description: FHIR client UUID
-        ClientMappingId:
-          type: integer
-          title: Clientmappingid
-          description: FHIR.ClientMappings primary key
-        Env:
-          type: string
-          title: Env
-          description: HHA environment for this mapping (app, app2, cloud)
-        Agency:
-          $ref: '#/components/schemas/AgencyRateLimitDetail'
-          description: Agency identifier and its request rate limit
-        RateLimitWindow:
-          type: string
-          title: Ratelimitwindow
-          description: Rate window granularity (Second, Minute)
     ValidationError:
       type: object
       required:
@@ -177,6 +114,69 @@ components:
         Data:
           $ref: '#/components/schemas/RateLimitConfigData'
           description: Rate limit configuration
+    RateLimitConfigData:
+      type: object
+      required:
+      - ClientId
+      - ClientMappingId
+      - Env
+      - Agency
+      - RateLimitWindow
+      title: RateLimitConfigData
+      description: Rate limit configuration for one unique client + agency + env combination.
+      example:
+        Agency:
+          AgencyId: 123
+          RateLimit: 50
+        ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+        ClientMappingId: 10123
+        Env: app
+        RateLimitWindow: Minute
+      properties:
+        ClientId:
+          type: string
+          title: Clientid
+          description: FHIR client UUID
+        ClientMappingId:
+          type: integer
+          title: Clientmappingid
+          description: FHIR.ClientMappings primary key
+        Env:
+          type: string
+          title: Env
+          description: HHA environment for this mapping (app, app2, cloud)
+        Agency:
+          $ref: '#/components/schemas/AgencyRateLimitDetail'
+          description: Agency identifier and its request rate limit
+        RateLimitWindow:
+          type: string
+          title: Ratelimitwindow
+          description: Rate window granularity (Second, Minute)
+    AgencyRateLimitDetail:
+      type: object
+      required:
+      - AgencyId
+      - RateLimit
+      title: AgencyRateLimitDetail
+      description: Per-agency portion of the rate limit config response.
+      properties:
+        AgencyId:
+          type: integer
+          title: Agencyid
+          description: Agency (vendor) identifier
+        RateLimit:
+          type: integer
+          title: Ratelimit
+          description: Allowed requests per RateLimitWindow
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
   securitySchemes:
     bearerAuth:
       type: oauth2
