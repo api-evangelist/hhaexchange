@@ -1,0 +1,12 @@
+{
+ "url": "https://api.hhaexchange.com/openapi.json",
+ "requested_url": "https://api.hhaexchange.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 36698,
+ "sha256": "f754b29e3de5bfcfd9e2921d27d9775ac0f2d46771b9a01d97176c2ba4ad99f6",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
