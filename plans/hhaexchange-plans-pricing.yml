@@ -1,3 +1,8 @@
+# Provenance stamped 2026-10-07 (roadmap#943): written by an API Evangelist sweep (dated 2026-06-13 by the file itself), not
+# harvested from the provider. `method: generated` so the economics campaign may replace it with a
+# dated, verbatim transcription; every figure below is unverified until it does.
+method: generated
+generated: '2026-06-13'
 name: HHAeXchange Plans and Pricing
 description: HHAeXchange is an enterprise homecare management platform sold to home health agencies and payers. Pricing is not publicly listed and is available upon request. The platform starts at approximately $375/month for agency-tier access. API access for third-party EVV (Electronic Visit Verification) integrations is governed by state Medicaid program agreements rather than direct commercial tiers.
 url: https://www.hhaexchange.com
@@ -36,3 +41,21 @@ notes:
   - API credentials are limited to 2 active credential sets per provider at a time.
   - API onboarding requires state-level Medicaid program attestation.
   - Contact: EINTSupport@hhaexchange.com for API integration inquiries.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models: []
+  units: []
+  plans:
+  - name: Agency Platform
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Third-Party EVV Integration (API)
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
