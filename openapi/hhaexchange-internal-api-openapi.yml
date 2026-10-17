@@ -192,6 +192,15 @@ components:
             $ref: '#/components/schemas/GenericReferenceItem'
           title: References
           default: []
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
     ProviderDetailsResponse:
       type: object
       title: ProviderDetailsResponse
@@ -251,15 +260,45 @@ components:
           additionalProperties: true
           title: Validation
           default: {}
-    HTTPValidationError:
+    GenericReferenceItem:
       type: object
-      title: HTTPValidationError
+      required:
+      - ReferenceCode
+      - Seq
+      title: GenericReferenceItem
+      description: Single generic reference item from GenericReferences table.
       properties:
-        detail:
+        ReferenceCode:
+          type: string
+          title: Referencecode
+        Seq:
+          type: integer
+          title: Seq
+        ReferenceValue:
+          type: string
+          title: Referencevalue
+          default: ''
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      properties:
+        loc:
           type: array
           items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
     PayerDetailsResponse:
       type: object
       title: PayerDetailsResponse
@@ -304,45 +343,6 @@ components:
           additionalProperties: true
           title: Validation
           default: {}
-    GenericReferenceItem:
-      type: object
-      required:
-      - ReferenceCode
-      - Seq
-      title: GenericReferenceItem
-      description: Single generic reference item from GenericReferences table.
-      properties:
-        ReferenceCode:
-          type: string
-          title: Referencecode
-        Seq:
-          type: integer
-          title: Seq
-        ReferenceValue:
-          type: string
-          title: Referencevalue
-          default: ''
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      properties:
-        loc:
-          type: array
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
   securitySchemes:
     bearerAuth:
       type: oauth2

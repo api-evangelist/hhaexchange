@@ -68,31 +68,15 @@ paths:
         - full_access
 components:
   schemas:
-    RateLimitConfigResponse:
+    HTTPValidationError:
       type: object
-      required:
-      - Message
-      - Data
-      title: RateLimitConfigResponse
-      description: Wrapper for GET /rate-limits/config response.
-      example:
-        Data:
-          Agency:
-            AgencyId: 123
-            RateLimit: 50
-          ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
-          ClientMappingId: 10123
-          Env: app
-          RateLimitWindow: Minute
-        Message: Rate limiting configuration fetched successfully
+      title: HTTPValidationError
       properties:
-        Message:
-          type: string
-          title: Message
-          description: Response message
-        Data:
-          $ref: '#/components/schemas/RateLimitConfigData'
-          description: Rate limit configuration
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
     RateLimitConfigData:
       type: object
       required:
@@ -131,15 +115,31 @@ components:
           type: string
           title: Ratelimitwindow
           description: Rate window granularity (Second, Minute)
-    HTTPValidationError:
+    RateLimitConfigResponse:
       type: object
-      title: HTTPValidationError
+      required:
+      - Message
+      - Data
+      title: RateLimitConfigResponse
+      description: Wrapper for GET /rate-limits/config response.
+      example:
+        Data:
+          Agency:
+            AgencyId: 123
+            RateLimit: 50
+          ClientId: 9b2f1a6e-3c84-4d8e-9b8a-7e2c9f2a1c45
+          ClientMappingId: 10123
+          Env: app
+          RateLimitWindow: Minute
+        Message: Rate limiting configuration fetched successfully
       properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
+        Message:
+          type: string
+          title: Message
+          description: Response message
+        Data:
+          $ref: '#/components/schemas/RateLimitConfigData'
+          description: Rate limit configuration
     AgencyRateLimitDetail:
       type: object
       required:
