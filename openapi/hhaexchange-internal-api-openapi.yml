@@ -351,3 +351,9 @@ components:
           tokenUrl: https://api.hhaexchange.com/v1/fhir/auth/token
           scopes:
             full_access: Read and write access for Internal Provider, Onboarding, and Rate limits.
+x-provenance:
+  method: harvested
+  publisher: HHAeXchange
+  source: https://api.hhaexchange.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
