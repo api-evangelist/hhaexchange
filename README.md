@@ -64,43 +64,150 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-HHAeXchange is a homecare management platform providing scheduling, Electronic Visit Verification (EVV), Medicaid billing, and caregiver management for home health agencies and payers. The platform exposes RESTful HTTPS APIs enabling third-party EVV systems to integrate with state Medicaid programs.
+Homecare management platform with a REST API for scheduling aide visits, verifying care delivery via telephony and mobile, managing authorizations, and processing Medicaid billing. Provides EVV (Electronic Visit Verification) APIs for third-party integration with state Medicaid systems.
 
-## API Overview
+**Areas:** Home Care · EVV · Electronic Visit Verification · Medicaid · Scheduling · Caregiver · Healthcare
 
-The HHAeXchange EVV API allows third-party EVV vendors and aggregators to submit caregiver records and visit data for state Medicaid compliance. The API uses OAuth 2.0 (client credentials flow) for authentication and returns JSON responses.
+## HHAeXchange on APIs.io
 
-### Key Endpoints
+Everything profiled for HHAeXchange is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/hhaexchange/](https://apis.io/providers/hhaexchange/)** — or go straight to one of the APIs or properties below.
 
-- `POST /identity/connect/token` — Obtain OAuth 2.0 access token (30-minute expiration)
-- `POST /api/v{version}/caregivers` — Create or update caregiver records
-- `POST /api/v{version}/visits` — Submit one or more EVV visit records
-- `PUT /api/v{version}/visits/{evvmsid}` — Update an existing visit record
-- `DELETE /api/v{version}/visits/{evvmsid}` — Remove a visit record
-- `GET /api/v{version}/visits/transactions/{transactionId}` — Check transaction processing status
+### APIs (3)
 
-### Authentication
+- [HHAeXchange Configuration API](https://apis.io/apis/hhaexchange/hhaexchange-configuration-api/) — The Configuration API from HHAeXchange — 1 operation(s) for configuration.
+- [HHAeXchange Internal API](https://apis.io/apis/hhaexchange/hhaexchange-internal-api/) — The Internal API from HHAeXchange — 3 operation(s) for internal.
+- [HHAeXchange Onboarding API](https://apis.io/apis/hhaexchange/hhaexchange-onboarding-api/) — The Onboarding API from HHAeXchange — 3 operation(s) for onboarding.
 
-OAuth 2.0 client credentials (client ID, client secret, scope). Tokens expire in 30 minutes and should be reused until expiration.
+### Published properties
 
-### Rate Limits
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- 200 calls per method per provider per minute
-- Maximum 5 transaction status checks per second
-- Maximum 2 active credential sets per provider
+#### Agentic access (1)
 
-## Documentation
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- [API Overview](https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API.htm)
-- [API Workflow and Endpoints](https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Workflow-Endpoints-P.htm)
-- [Onboarding and Integration](https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-Onboarding-Integration-P.htm)
-- [HTTP Response Status Codes](https://knowledge.hhaexchange.com/edi/Content/Documentation/EDI/API-HTTP-Response-Status-Codes-P.htm)
-- [System Status](https://hhaexchange.statuspage.io/)
+- [Hhaexchange Agentic Access](https://apis.io/agentic-access/hhaexchange/hhaexchange-agentic-access/)
 
-## Support
+#### JSON Schema (1)
 
-For API integration inquiries: EINTSupport@hhaexchange.com
+The data models the API reads and writes.
 
-## APIs.json
+- [HHAeXchange FHIR API Schemas](https://apis.io/schemas/hhaexchange/hhaexchange-fhir/)
 
-This repository is indexed by [apis.json](apis.yml) following the [APIs.json 0.19 specification](https://apisjson.org).
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Hhaexchange Context](https://apis.io/jsonld/hhaexchange/hhaexchange-context/)
+
+#### Examples (1)
+
+Example requests and responses.
+
+- [Hhaexchange Fhir Examples](https://apis.io/examples/hhaexchange/hhaexchange-fhir-examples/)
+
+#### Collections (3)
+
+Postman and Open Collection request collections.
+
+- [HHAeXchange FHIR Configuration API](https://apis.io/collections/hhaexchange/open-hhaexchange-configuration-api/)
+- [HHAeXchange FHIR Configuration Internal API](https://apis.io/collections/hhaexchange/open-hhaexchange-internal-api/)
+- [HHAeXchange FHIR Configuration Onboarding API](https://apis.io/collections/hhaexchange/open-hhaexchange-onboarding-api/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [HHAeXchange — jsonschema rules](https://apis.io/rules/hhaexchange/hhaexchange-jsonschema-spectral-rules/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Hhaexchange Authentication](https://apis.io/security/hhaexchange/hhaexchange-authentication/)
+- [Hhaexchange Domain Security](https://apis.io/security/hhaexchange/hhaexchange-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Hhaexchange Scopes](https://apis.io/scopes/hhaexchange/hhaexchange-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Hhaexchange Plans Pricing](https://apis.io/plans/hhaexchange/hhaexchange-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Hhaexchange Rate Limits](https://apis.io/rate-limits/hhaexchange/hhaexchange-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Hhaexchange Finops](https://apis.io/finops/hhaexchange/hhaexchange-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.hhaexchange.com/)
+- [Support](https://www.hhaexchange.com/knowledge-base)
+- [Blog](https://www.hhaexchange.com/feed/)
+
+## API Evangelist rating
+
+**Kin Score 33.7** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 56.9 |
+| Contract governance | 9.8 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 40.5 |
+| Access clarity | 5.3 |
+
+**Agent readiness 29.0** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 26.6** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/hhaexchange/](https://apis.io/providers/hhaexchange/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for HHAeXchange: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/hhaexchange/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
